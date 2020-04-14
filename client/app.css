@@ -5,34 +5,28 @@ body {
     min-height:100vh;
   }
 
+
 #app {
-    display:flex;
+    display:block;
     border: 10px solid black;
     width: 1024px;
     height:768px;
     font-size: 1.5rem;
 }
+
+#game {
+    display:absolute;
+}
+
+.borderCheck {
+    border: 3px solid red;
+}
+
+.blocker{
+    width:100%;
+    
+}
   
-
-.box {
-    border:4px red dashed;
-}
-
-.gray{
-    width: 200px;
-    height:200px;
-    background-color: gray;
-}
-.green{
-    width: 200px;
-    height:200px;
-    background-color: rgb(111, 185, 111);
-}
-.blue{
-    width: 200px;
-    height:200px;
-    background-color: rgb(77, 185, 212);
-}
 
 
 
