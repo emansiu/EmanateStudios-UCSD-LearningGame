@@ -1,32 +1,12 @@
-body {
+
+body{
     display:flex;
-    align-items: center; /*<--vertical center--  */
-    justify-content: center; /*<--horizontal center--  */
-    min-height:100vh;
-  }
-
-
-#app {
-    display:block;
-    border: 10px solid black;
-    width: 1024px;
-    height:768px;
-    font-size: 1.5rem;
 }
-
-#game {
-    display:absolute;
+canvas {
+    border:2px solid green;
+    margin: 3rem auto;
 }
-
-.borderCheck {
-    border: 3px solid red;
+p {
+    margin:2rem;
 }
-
-.blocker{
-    width:100%;
-    
-}
-  
-
-
 

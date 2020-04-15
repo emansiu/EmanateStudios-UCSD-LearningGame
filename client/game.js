@@ -1,32 +1,52 @@
+//------- INITIALIZE CORE GLOBAL GAME COMPONENTS-------
+const canvas = document.getElementById("myCanvas");
 
 
-const canvas = document.getElementById('game')
+const globalScale = 1
+const characterScale = 1;
+const ctx = canvas.getContext("2d");
 
-const globalScale = 1;
+ctx.canvas.width = 1366 * globalScale;
+ctx.canvas.height = 768 * globalScale;
 
-const levels = 6;
-const numberOfRounds = 30;
+const ballRadius = 60
 
-const square = canvas.getContext("2d");
-square.beginPath();
-square.rect(20, 20, 50, 50);
-square.fillStyle = "#FF0000";
-square.fill();
-square.closePath();
+let xPosition = canvas.width / 2;
+let yPosition = canvas.height - ballRadius;
 
-let demonAttributes = {
-    eyeDiameter: [15, 30], //<-- 15px goes left, 30px goes right
-    eyeColor: ['yellow', 'blue'],
-    eyeShade: [1, 2, 3, 4, 5],
-    color: ['red', 'gray'],
-    hornHeightMin: 15,
-    hornHeightMax: 60,
-    hornWidthMin: 5,
-    hornWidthMax: 20,
-    bodyHeight: 20,
-    bodyWidth: 20
+const travelSpeed = {
+    x: 2,
+    y: -2
 }
 
-gsap.to("#game", { delay: 1, duration: 2, x: 300, y: -400 });
+// ----------- END CORE GLOBAL COMPONENTS---------------
 
-console.log(demonAttributes.eyeColor)
+
+
+
+
+let drawDemon = (scale) => {
+    ctx.beginPath();
+    ctx.arc(xPosition, yPosition, ballRadius * scale, 0, Math.PI * 2);
+    ctx.fillStyle = "#0095DD";
+    ctx.fill();
+    ctx.closePath();
+}
+
+let draw = () => {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawDemon(characterScale);
+
+    if (xPosition + travelSpeed.x > canvas.width - ballRadius || xPosition + travelSpeed.x < ballRadius) {
+        travelSpeed.x = -travelSpeed.x;
+    }
+    if (yPosition + travelSpeed.y > canvas.height - ballRadius || yPosition + travelSpeed.y < ballRadius) {
+        travelSpeed.y = -travelSpeed.y;
+    }
+
+    xPosition += travelSpeed.x;
+    yPosition += travelSpeed.y;
+
+}
+
+setInterval(draw, 10);
