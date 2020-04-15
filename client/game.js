@@ -1,6 +1,9 @@
 //------- INITIALIZE CORE GLOBAL GAME COMPONENTS-------
 const canvas = document.getElementById("myCanvas");
 
+let help = () => {
+    console.log('help')
+}
 
 const globalScale = 1
 const characterScale = 1;
@@ -32,6 +35,8 @@ let drawDemon = (scale) => {
     ctx.fill();
     ctx.closePath();
 }
+
+
 
 let draw = () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
