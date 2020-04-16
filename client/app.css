@@ -1,12 +1,15 @@
 
 body{
-    display:flex;
+    display:block;
 }
-canvas {
-    border:2px solid green;
+
+.borderCheck {
+    border:10px solid green;
     margin: 3rem auto;
 }
-p {
-    margin:2rem;
+
+#playArea {
+    width:1366px;
+    height:768px;
 }
 
