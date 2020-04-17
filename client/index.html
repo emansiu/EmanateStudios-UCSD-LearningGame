@@ -12,16 +12,31 @@
 </head>
 
 <body>
-    <p id="demo"></p>
-    <div id="playArea" class="borderCheck">
-        <svg class="borderCheck" viewBox=" 0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-            <!-- Using g to inherit presentation attributes -->
-            <g id="gear" fill="white" stroke="green" stroke-width="5">
-                <circle cx="40" cy="40" r="25" />
+
+    <div id="container">
+
+
+        <!-- PLAYAREA IN WHICH CODE IS PLACED INTO FROM GAME.JS -->
+        <svg id="playArea" class="borderCheck2" viewBox="0 0 85 56.25" height="0" width="0"
+            xmlns="http://www.w3.org/2000/svg">
+
+            <text id="points" x="40" y="3" fill="blue">Level</text>
+            <text id="points" x="40" y="6" fill="blue">Score</text>
+
+
+            <!-- THIS IS THE OCCLUDER TO BLOCK CHARACTER CLICK -->
+            <g>
+                <path id="blocker"
+                    d="m18.1753,1.821852c0,0 24.29116,24.21453 24.29116,24.21453c0,0 24.44442,-24.06128 24.44442,-24.06128c0,0 0,20.68964 0,20.68964c0,0 -13.40995,13.5632 -13.40995,13.5632c0,0 -21.99231,-0.07663 -22.00194,-0.11737c0.00963,0.04074 -13.40032,-13.59909 -13.40994,-13.63983c0.00962,-0.03589 0.08625,-20.64889 0.08625,-20.64889z"
+                    stroke-width="1.5" stroke="#000" fill="#000000" />
             </g>
+
+
+
         </svg>
 
     </div>
+
 
 
     <!-- IMPORTING GSAP AND OUR OWN GAME.JS -->
