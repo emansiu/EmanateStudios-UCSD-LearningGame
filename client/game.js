@@ -8,8 +8,19 @@ playArea.setAttribute("height", `${'100%'}`);
 playArea.setAttribute("width", `${'100%'}`);
 
 let score = 0;
-let round = 0;
+let currentRound = 0;
+const numberOfRounds = 3;
 let level = 1;
+const numberOfLevels = 2;
+let keepPlaying = true;
+
+// direction animations:
+let animRight = gsap.timeline();
+let animLeft = gsap.timeline();
+
+// initialze heads up display
+document.getElementById("level").innerHTML = `Level : ${level}/${numberOfLevels}`;
+document.getElementById("score").innerHTML = `Score : ${score}`;
 
 // ----------- END CORE GLOBAL COMPONENTS---------------
 
@@ -18,13 +29,7 @@ let addScore = () => {
     return score += 1;
 }
 let addRound = () => {
-    return round += 1;
-}
-let resetScore = () => {
-    score = 0;
-}
-let resetRound = () => {
-    score = 0;
+    return currentRound += 1;
 }
 let nextLevel = () => {
     level += 1;
@@ -32,45 +37,90 @@ let nextLevel = () => {
 let removeElement = (elementToRemove) => {
     elementToRemove.remove()
 }
+let checkGameOver = (characterToRemove) => {
+    if (level === numberOfLevels && currentRound === numberOfRounds) {
+        keepPlaying = false;
+        alert('thanks for playing, you are all done!')
+    } else if (score === numberOfRounds) {
+        keepPlaying = false;
+        alert('a perfect round! You are free to go!')
+    } else if (currentRound === numberOfRounds) {
+        keepPlaying = true;
+        currentRound = 1;
+        score = 0;
+        level += 1;
+        document.getElementById("level").innerHTML = `Level : ${level}/${numberOfLevels}`
+        document.getElementById("score").innerHTML = `Score : ${score}`
+        gameAnimation(createCharacter(), createOccluder()); //<!!!***RECURSIVELY STARTING ANOTHER ROUND***!!!
+    } else {
+        if (characterToRemove) {
+            removeElement(characterToRemove)
+        }
+        addRound();
+        document.getElementById("level").innerHTML = `Level : ${level}/${numberOfLevels}`
+        document.getElementById("score").innerHTML = `Score : ${score}`
+        gameAnimation(createCharacter(), createOccluder()); //<!!!***RECURSIVELY STARTING ANOTHER ROUND***!!!
+    }
+    console.log(`current round: ${currentRound}, level: ${level}, score: ${score}`)
+}
+let clearDirectionAnimations = () => {
+    animRight.clear();
+    animLeft.clear();
+}
 
 
 //=========================== Animation section ========================================
-//******CHARACTER FADE OUT WHEN CLICKED
-const characterFadeOut = (characterToFade) => {
+//******CHARACTER FADE OUT WHEN CLICKED and delete object when animmation is done
+const characterFadeOut = (characterToFade, occluder) => {
     gsap.timeline({ onComplete: removeElement, onCompleteParams: [characterToFade] })
-        .to(characterToFade, { duration: 0.5, scale: 1.2, opacity: 0, transformOrigin: "center center" })
+        .to(characterToFade, { duration: 0.5, scale: 1.2, opacity: 0, transformOrigin: "center center", onComplete: clearDirectionAnimations })
+        .to(occluder, { duration: 1, y: 2, opacity: 0, scale: 1.1, transformOrigin: "center center", onComplete: checkGameOver, onCompleteParams: [characterToFade] }, "+=0.5")
 }
 //******ANIMATE RIGHT
-const animateRight = (characterToAnimate) => {
-    gsap.timeline()
-        .to(characterToAnimate, { duration: 0.5, x: 21, y: -30 })
-        .to(characterToAnimate, { duration: 0.5, opacity: 1 })
-        .to(characterToAnimate, { duration: 0.5, x: 47, y: -30, ease: "none" })
+const animateRight = (characterToAnimate, occluder) => {
+
+    animRight.to(characterToAnimate, { duration: 0.5, x: 21, y: -30 })
+    animRight.to(characterToAnimate, { duration: 0.5, opacity: 1 })
+    animRight.to(characterToAnimate, { duration: 0.5, x: 52, y: -30, ease: "none" })
+    animRight.to(occluder, { duration: 1, y: 2, opacity: 0, scale: 1.1, transformOrigin: "center center", onComplete: checkGameOver, onCompleteParams: [characterToAnimate] }, "+=0.5")
 }
 //******ANIMATE LEFT
-const animateLeft = (characterToAnimate) => {
-    gsap.timeline()
-        .to(characterToAnimate, { duration: 0.5, x: -21, y: -30 })
-        .to(characterToAnimate, { duration: 0.5, opacity: 1 })
-        .to(characterToAnimate, { duration: 0.5, x: -47, y: -30, ease: "none" })
+const animateLeft = (characterToAnimate, occluder) => {
+
+    animLeft.to(characterToAnimate, { duration: 0.5, x: -21, y: -30 })
+    animLeft.to(characterToAnimate, { duration: 0.5, opacity: 1 })
+    animLeft.to(characterToAnimate, { duration: 0.5, x: -52, y: -30, ease: "none" })
+    animLeft.to(occluder, { duration: 1, y: 2, opacity: 0, scale: 1.1, transformOrigin: "center center", onComplete: checkGameOver, onCompleteParams: [characterToAnimate] }, "+=0.5")
 }
 //******MAIN GAME ANIMATION
-const gameAnimation = async (characterToAnimate, occluder) => {
+const gameAnimation = (characterToAnimate, occluder) => {
 
     let eyeSize = characterToAnimate.childNodes[2].getAttribute("r")
 
     let directionToAnimate = () => {
         if (eyeSize == "1.6") {
-            return animateRight(characterToAnimate);
+            return animateRight(characterToAnimate, occluder);
         } else {
-            return animateLeft(characterToAnimate);
+            return animateLeft(characterToAnimate, occluder);
         }
     }
 
-    await gsap.timeline({ onComplete: directionToAnimate, onCompleteParams: [characterToAnimate] })
+    // make character clickable only once per round
+    const once = () => {
+        characterToAnimate.removeEventListener("mousedown", once);
+        document.getElementById("score").innerHTML = `Score : ${addScore()}`;
+        characterFadeOut(characterToAnimate, occluder);
+
+    }
+    // provide listener only after character goes behind occluder/blocker
+    let provideListener = () => {
+        characterToAnimate.addEventListener("mousedown", once);
+    }
+    // character animates on, goes behind occluder, then passes off to direction animation
+    gsap.timeline({ onComplete: directionToAnimate, onCompleteParams: [characterToAnimate, occluder] })
         .from(occluder, { duration: 1, y: 2, opacity: 0 }, "+=0.5")
         .from(characterToAnimate, { duration: 1.5, y: 30, ease: "elastic.out(1,1)" }, "+=1")
-        .to(characterToAnimate, { duration: 1, y: -16.4, ease: "power2.in" }, "+=2")
+        .to(characterToAnimate, { duration: 1, y: -16.4, ease: "power2.in", onComplete: provideListener }, "+=2")
         .to(characterToAnimate, { duration: 0.5, opacity: 0 })
 
 }
@@ -181,25 +231,12 @@ const createCharacter = (() => {
     //---- attach to static svg on page ----
     document.getElementById("playArea").appendChild(characterGroup);
 
-    // make character clickable only once per round
 
-    const once = () => {
-        characterGroup.removeEventListener("mousedown", once);
-        document.getElementById("score").innerHTML = `Score : ${addScore()}`;
-        characterFadeOut(characterGroup);
-
-    }
-    characterGroup.addEventListener("mousedown", once);
 
     return (characterGroup)
 });
 
-
-// for (i = 1; i = level; i++) {
-
-// }
-
-gameAnimation(createCharacter(), createOccluder());
+//<!!!***RECURSIVE THROUGH GAME OVER CHECK FUNCTION***!!!
 gameAnimation(createCharacter(), createOccluder());
 
 
