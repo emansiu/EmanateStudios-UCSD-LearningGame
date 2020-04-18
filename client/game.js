@@ -8,6 +8,7 @@ playArea.setAttribute("height", `${'100%'}`);
 playArea.setAttribute("width", `${'100%'}`);
 
 let score = 0;
+let round = 0;
 let level = 1;
 
 // ----------- END CORE GLOBAL COMPONENTS---------------
@@ -16,7 +17,13 @@ let level = 1;
 let addScore = () => {
     return score += 1;
 }
+let addRound = () => {
+    return round += 1;
+}
 let resetScore = () => {
+    score = 0;
+}
+let resetRound = () => {
     score = 0;
 }
 let nextLevel = () => {
@@ -28,21 +35,47 @@ let removeElement = (elementToRemove) => {
 
 
 //=========================== Animation section ========================================
+//******CHARACTER FADE OUT WHEN CLICKED
 const characterFadeOut = (characterToFade) => {
     gsap.timeline({ onComplete: removeElement, onCompleteParams: [characterToFade] })
         .to(characterToFade, { duration: 0.5, scale: 1.2, opacity: 0, transformOrigin: "center center" })
 }
-const gameAnimation = (characterToAnimate) => {
+//******ANIMATE RIGHT
+const animateRight = (characterToAnimate) => {
     gsap.timeline()
-        .from(characterToAnimate, { duration: 1, y: 30 }, "+=1")
-        .to(characterToAnimate, { duration: 1, y: -16.4 }, "+=2")
-        .to(characterToAnimate, { duration: 0.5, opacity: 0 })
         .to(characterToAnimate, { duration: 0.5, x: 21, y: -30 })
         .to(characterToAnimate, { duration: 0.5, opacity: 1 })
-        .to(characterToAnimate, { duration: 1.5, x: 57, y: -30 })
+        .to(characterToAnimate, { duration: 0.5, x: 47, y: -30, ease: "none" })
+}
+//******ANIMATE LEFT
+const animateLeft = (characterToAnimate) => {
+    gsap.timeline()
+        .to(characterToAnimate, { duration: 0.5, x: -21, y: -30 })
+        .to(characterToAnimate, { duration: 0.5, opacity: 1 })
+        .to(characterToAnimate, { duration: 0.5, x: -47, y: -30, ease: "none" })
+}
+//******MAIN GAME ANIMATION
+const gameAnimation = async (characterToAnimate, occluder) => {
+
+    let eyeSize = characterToAnimate.childNodes[2].getAttribute("r")
+
+    let directionToAnimate = () => {
+        if (eyeSize == "1.6") {
+            return animateRight(characterToAnimate);
+        } else {
+            return animateLeft(characterToAnimate);
+        }
+    }
+
+    await gsap.timeline({ onComplete: directionToAnimate, onCompleteParams: [characterToAnimate] })
+        .from(occluder, { duration: 1, y: 2, opacity: 0 }, "+=0.5")
+        .from(characterToAnimate, { duration: 1.5, y: 30, ease: "elastic.out(1,1)" }, "+=1")
+        .to(characterToAnimate, { duration: 1, y: -16.4, ease: "power2.in" }, "+=2")
+        .to(characterToAnimate, { duration: 0.5, opacity: 0 })
+
 }
 
-//=========================== Randomize features ========================================
+//=========================== ELEMENTS TO CREATE ========================================
 const features = {
     eyeColor: [
         // yellow shades
@@ -77,6 +110,7 @@ const createOccluder = () => {
 
     // ---attach to svg ---
     document.getElementById("playArea").appendChild(occluder);
+    return occluder;
 }
 
 const createCharacter = (() => {
@@ -150,20 +184,23 @@ const createCharacter = (() => {
     // make character clickable only once per round
 
     const once = () => {
-        characterGroup.removeEventListener("click", once);
+        characterGroup.removeEventListener("mousedown", once);
         document.getElementById("score").innerHTML = `Score : ${addScore()}`;
         characterFadeOut(characterGroup);
 
     }
-    characterGroup.addEventListener("click", once);
+    characterGroup.addEventListener("mousedown", once);
 
     return (characterGroup)
 });
 
-gameAnimation(createCharacter());
 
-createOccluder();
+// for (i = 1; i = level; i++) {
 
+// }
+
+gameAnimation(createCharacter(), createOccluder());
+gameAnimation(createCharacter(), createOccluder());
 
 
 
