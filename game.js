@@ -1,3 +1,4 @@
+import axios from 'axios';
 //------- INITIALIZE CORE GLOBAL GAME COMPONENTS-------
 const playArea = document.getElementById("playArea");
 
@@ -30,6 +31,22 @@ console.log(`current round: ${currentRound}, level: ${level}, score: ${score}`)
 
 //=========================== Game functions ========================================
 let addScore = () => {
+    const axiosOptions = {
+        qs: {
+            hapikey: '8648f2fc-2dfe-4a81-a1c1-183aa4739aae'
+        },
+        headers: {
+            accept: 'application/json',
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Credentials': 'true'
+        }
+    }
+    try {
+        axios.post('/', { "name": "person" }, axiosOptions)
+    } catch (err) {
+        console.log(err);
+    }
+
     return score += 1;
 }
 let addRound = () => {
