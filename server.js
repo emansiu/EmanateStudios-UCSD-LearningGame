@@ -59,7 +59,7 @@ app.post('/api', async (req, res) => {
 // ---SERVE STATIC ASSETS FOR PRODUCTION -----
 if (process.env.NODE_ENV === "production") {
     // set static folder
-    app.use(express.static(""));
+    app.use(express.static(__dirname));
 
     app.get("/", (req, res) => {
         res.sendFile(path.resolve(__dirname, "index.html"));
