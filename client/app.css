@@ -1,10 +1,11 @@
 
 body{
     display:block;
-    padding:1rem;
+    padding:2px;
+    background-color:gray;
 }
 
-.borderCheck2 {
+.gameViewBorder {
     border:2px solid gray;
 }
 
@@ -28,4 +29,54 @@ text {
           -ms-user-select: none; /* Internet Explorer/Edge */
               user-select: none; /* Non-prefixed version, currently
                                     supported by Chrome, Opera and Firefox */
+}
+
+svg{
+    background-color:rgb(238, 238, 238);
+}
+html{
+    height:100%;
+}
+#gameMenu{
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    background: '#70bg32';
+    background-repeat:no-repeat;
+    background: -webkit-linear-gradient( to left top, rgb(124, 124, 168), rgb(58, 153, 170)); 
+    background: -moz-linear-gradient( to left top, rgb(124, 124, 168), rgb(58, 153, 170)); 
+    background: -ms-linear-gradient( to left top, rgb(124, 124, 168), rgb(58, 153, 170)); 
+    background: -o-linear-gradient( to left top, rgb(124, 124, 168), rgb(58, 153, 170)); 
+    background: linear-gradient( to left top, rgb(124, 124, 168), rgb(58, 153, 170)); 
+}
+.menuStyle{
+    height:100vh;
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.menuStyle p {
+    font-size: 3rem;
+    color:white;
+    margin:0.7rem;
+}
+button {
+    background-color: rgb(129, 172, 60); /* Green */
+    border-radius: 5px;
+    border: none;
+    color: white;
+    padding: 20px 50px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 2rem;
+    margin-top: 3rem;
+}
+.dropShadow {
+    box-shadow: 0px 10px 10px rgb(81, 82, 81);
+}
+.textShadow {
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.479);
 }

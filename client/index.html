@@ -11,30 +11,20 @@
     <title>UCSD D.O.P.</title>
 </head>
 
-<body>
-
-    <div id="container">
-
-
-        <!-- PLAYAREA IN WHICH CODE IS PLACED INTO FROM GAME.JS -->
-        <svg id="playArea" class="borderCheck2" viewBox="0 0 85 56.25" height="0" width="0"
-            xmlns="http://www.w3.org/2000/svg">
-
-            <text id="level" x="40" y="3" fill="blue"></text>
-            <text id="score" x="40" y="6" fill="blue"></text>
+<body id="gameMenu">
 
 
 
-        </svg>
-
+    <div class="menuStyle">
+        <p class="textShadow">Once you begin there is no pausing.</p>
+        <p class="textShadow">Are you ready?</p>
+        <a href="game.html">
+            <button class="dropShadow">Get Started</button>
+        </a>
     </div>
 
 
 
-    <!-- IMPORTING GSAP AND OUR OWN GAME.JS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.2.6/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.2.6/Draggable.min.js"></script>
-    <script src="game.js"></script>
 
 </body>
 

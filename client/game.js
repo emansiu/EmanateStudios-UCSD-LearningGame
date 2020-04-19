@@ -8,7 +8,7 @@ playArea.setAttribute("height", `${'100%'}`);
 playArea.setAttribute("width", `${'100%'}`);
 
 let score = 0;
-let currentRound = 0;
+let currentRound = 1;
 const numberOfRounds = 3;
 let level = 1;
 const numberOfLevels = 2;
@@ -21,7 +21,22 @@ let animLeft = gsap.timeline();
 // initialze heads up display
 document.getElementById("level").innerHTML = `Level : ${level}/${numberOfLevels}`;
 document.getElementById("score").innerHTML = `Score : ${score}`;
+console.log(`current round: ${currentRound}, level: ${level}, score: ${score}`)
 
+
+let elem = document.getElementById("appBody");
+var openFullscreen = () => {
+    if (elem.requestFullscreen) {
+        elem.requestFullscreen();
+    } else if (elem.mozRequestFullScreen) { /* Firefox */
+        elem.mozRequestFullScreen();
+    } else if (elem.webkitRequestFullscreen) { /* Chrome, Safari & Opera */
+        elem.webkitRequestFullscreen();
+    } else if (elem.msRequestFullscreen) { /* IE/Edge */
+        elem.msRequestFullscreen();
+    }
+}
+window.onload = openFullscreen()
 // ----------- END CORE GLOBAL COMPONENTS---------------
 
 //=========================== Game functions ========================================
