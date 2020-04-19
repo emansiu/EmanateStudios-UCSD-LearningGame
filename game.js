@@ -9,9 +9,9 @@ playArea.setAttribute("width", `${'100%'}`);
 
 let score = 0;
 let currentRound = 1;
-const numberOfRounds = 3;
+const numberOfRounds = 30;
 let level = 1;
-const numberOfLevels = 2;
+const numberOfLevels = 6;
 let keepPlaying = true;
 
 // direction animations:
