@@ -58,9 +58,10 @@ app.post('/api', async (req, res) => {
 
 // ---SERVE STATIC ASSETS FOR PRODUCTION -----
 if (process.env.NODE_ENV === "production") {
-    // set static folder
+    // set static folder. __dirname if file is in root
     app.use(express.static(__dirname));
 
+    // Now assign the file to use to land on
     app.get("/", (req, res) => {
         res.sendFile(path.resolve(__dirname, "index.html"));
     })
@@ -78,7 +79,7 @@ sequelize
         console.error("Unable to connect to the database:", err);
     });
 
-// sequelize.sync({ force: true });
+sequelize.sync({ force: true });
 
 // // //-------------------GET PORT TO LISTEN ON-----------------
 const PORT = process.env.PORT || 5000;
