@@ -14,22 +14,41 @@ app.use(express.urlencoded({ extended: true })); //Parse URL-encoded bodies
 app.use(express.json({ extended: false })); //Used to parse JSON bodies;
 
 //------------------ ROUTES ----------------------------------
-// app.use('/api/auth', require("./api/routes/authRoutes"));
-
+// DISCLAIMER
 app.get('/', (req, res) => {
-    res.send("hit dat")
+    res.send("Hello there. No need for you to be here. But thanks for stopping by.")
 })
-app.post('/', async (req, res) => {
+// GET DATA
+app.get('/api', async (req, res) => {
+    const { credentials } = req.body
+
+    if (credentials === process.env.DB_SK) {
+        try {
+            let UserData = await test.findAll();
+
+            if (UserData) {
+                return res.status(400).json({ UserData }).send("Successful Retrieval");
+            }
+        }
+        catch (err) {
+            console.error(err.message);
+            res.status(500).send('Server Error')
+        }
+    } else {
+        res.status(500).send('Server Error')
+    }
+})
+
+// CREATE NEW DATA ROUND
+app.post('/api', async (req, res) => {
 
     const { name } = req.body;
 
     try {
-
-        //---- create new user with hashedPassword -----
         await test.create({
             name
         });
-
+        res.status(200).send({ msg: "info uploaded" })
     } catch (err) {
         console.error(err.message);
         res.status(500).send('Server Error')
