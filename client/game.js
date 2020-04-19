@@ -24,19 +24,8 @@ document.getElementById("score").innerHTML = `Score : ${score}`;
 console.log(`current round: ${currentRound}, level: ${level}, score: ${score}`)
 
 
-let elem = document.getElementById("appBody");
-var openFullscreen = () => {
-    if (elem.requestFullscreen) {
-        elem.requestFullscreen();
-    } else if (elem.mozRequestFullScreen) { /* Firefox */
-        elem.mozRequestFullScreen();
-    } else if (elem.webkitRequestFullscreen) { /* Chrome, Safari & Opera */
-        elem.webkitRequestFullscreen();
-    } else if (elem.msRequestFullscreen) { /* IE/Edge */
-        elem.msRequestFullscreen();
-    }
-}
-window.onload = openFullscreen()
+// let elem = document.getElementById("appBody");
+
 // ----------- END CORE GLOBAL COMPONENTS---------------
 
 //=========================== Game functions ========================================
