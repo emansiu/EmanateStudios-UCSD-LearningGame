@@ -14,10 +14,10 @@ app.use(express.urlencoded({ extended: true })); //Parse URL-encoded bodies
 app.use(express.json({ extended: false })); //Used to parse JSON bodies;
 
 //------------------ ROUTES ----------------------------------
-// DISCLAIMER
-app.get('/', (req, res) => {
-    res.send("Hello there. No need for you to be here. But thanks for stopping by.")
-})
+// // DISCLAIMER
+// app.get('/', (req, res) => {
+//     res.send("Hello there. No need for you to be here. But thanks for stopping by.")
+// })
 // GET DATA
 app.get('/api', async (req, res) => {
     const { credentials } = req.body
@@ -59,10 +59,10 @@ app.post('/api', async (req, res) => {
 // ---SERVE STATIC ASSETS FOR PRODUCTION -----
 if (process.env.NODE_ENV === "production") {
     // set static folder
-    app.use(express.static("client/build"));
+    app.use(express.static(""));
 
     app.get("*", (req, res) => {
-        res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
+        res.sendFile(path.resolve(__dirname, "index.html"));
     })
 }
 
