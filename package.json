@@ -1,10 +1,14 @@
 {
-  "name": "HiddenPredictor_Game",
+  "name": "ft-game",
   "version": "1.0.0",
   "description": "A project made to measure how fast people can associate attributes to a given task in order to optimize efficiency of said task.",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "server": "nodemon server.js",
+    "client": "npm start --prefix client",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client"
   },
   "repository": {
     "type": "git",
