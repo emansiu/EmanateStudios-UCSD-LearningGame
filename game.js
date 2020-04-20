@@ -27,29 +27,23 @@ document.getElementById("score").innerHTML = `Score : ${score}`;
 console.log(`current round: ${currentRound}, level: ${level}, score: ${score}`)
 
 //initialize sound effects
-// const soundFX = [
-//     {
-//         hitSound: new sound("soundFX/starduck_UI_move_01.wav")
-//     }
-// ];
-// soundFX[0].hitSound.play();
-// class sound {
-//     constructor(src) {
-//         this.sound = document.createElement("audio");
-//         this.sound.src = src;
-//         this.sound.setAttribute("preload", "auto");
-//         this.sound.setAttribute("controls", "none");
-//         this.sound.style.display = "none";
-//         document.body.appendChild(this.sound);
-//         this.play = function () {
-//             this.sound.play();
-//         };
-//         this.stop = function () {
-//             this.sound.pause();
-//         };
-//     }
-// }
-// const mySound = new sound("soundFX/starduck_UI_back_01.wav");
+class sound {
+    constructor(src) {
+        this.sound = document.createElement("audio");
+        this.sound.src = src;
+        this.sound.setAttribute("preload", "auto");
+        this.sound.setAttribute("controls", "none");
+        this.sound.style.display = "none";
+        document.body.appendChild(this.sound);
+        this.play = function () {
+            this.sound.play();
+        };
+        this.stop = function () {
+            this.sound.pause();
+        };
+    }
+}
+const mySound = new sound("soundFX/starduck_UI_back_01.wav");
 
 
 
@@ -164,7 +158,7 @@ const gameAnimation = (characterToAnimate, occluder) => {
 
     // make character clickable only once per round
     const once = () => {
-        // mySound.play();
+        mySound.play();
         effectAnimation();
         characterToAnimate.removeEventListener("mousedown", once);
         document.getElementById("score").innerHTML = `Score : ${addScore()}`;
