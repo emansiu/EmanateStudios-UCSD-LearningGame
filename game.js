@@ -33,19 +33,20 @@ console.log(`current round: ${currentRound}, level: ${level}, score: ${score}`)
 //     }
 // ];
 // soundFX[0].hitSound.play();
-
-function sound(src) {
-    this.sound = document.createElement("audio");
-    this.sound.src = src;
-    this.sound.setAttribute("preload", "auto");
-    this.sound.setAttribute("controls", "none");
-    this.sound.style.display = "none";
-    document.body.appendChild(this.sound);
-    this.play = function () {
-        this.sound.play();
-    }
-    this.stop = function () {
-        this.sound.pause();
+class sound {
+    constructor(src) {
+        this.sound = document.createElement("audio");
+        this.sound.src = src;
+        this.sound.setAttribute("preload", "auto");
+        this.sound.setAttribute("controls", "none");
+        this.sound.style.display = "none";
+        document.body.appendChild(this.sound);
+        this.play = function () {
+            this.sound.play();
+        };
+        this.stop = function () {
+            this.sound.pause();
+        };
     }
 }
 const mySound = new sound("soundFX/starduck_UI_back_01.wav");
