@@ -1,4 +1,4 @@
-import axios from 'axios';
+// import axios from 'axios';
 //------- INITIALIZE CORE GLOBAL GAME COMPONENTS-------
 const playArea = document.getElementById("playArea");
 
@@ -22,31 +22,41 @@ let animLeft = gsap.timeline();
 // initialze heads up display
 document.getElementById("level").innerHTML = `Level : ${level}/${numberOfLevels}`;
 document.getElementById("score").innerHTML = `Score : ${score}`;
+
+// UNCOMMENT TO CONSOLE SCORE
 console.log(`current round: ${currentRound}, level: ${level}, score: ${score}`)
 
+//initialize sound effects
+// const soundFX = [
+//     {
+//         hitSound: new sound("soundFX/starduck_UI_move_01.wav")
+//     }
+// ];
+// soundFX[0].hitSound.play();
 
-// let elem = document.getElementById("appBody");
+function sound(src) {
+    this.sound = document.createElement("audio");
+    this.sound.src = src;
+    this.sound.setAttribute("preload", "auto");
+    this.sound.setAttribute("controls", "none");
+    this.sound.style.display = "none";
+    document.body.appendChild(this.sound);
+    this.play = function () {
+        this.sound.play();
+    }
+    this.stop = function () {
+        this.sound.pause();
+    }
+}
+const mySound = new sound("soundFX/starduck_UI_back_01.wav");
+
+
+
 
 // ----------- END CORE GLOBAL COMPONENTS---------------
 
 //=========================== Game functions ========================================
 let addScore = () => {
-    const axiosOptions = {
-        qs: {
-            hapikey: '8648f2fc-2dfe-4a81-a1c1-183aa4739aae'
-        },
-        headers: {
-            accept: 'application/json',
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Credentials': 'true'
-        }
-    }
-    try {
-        axios.post('/', { "name": "person" }, axiosOptions)
-    } catch (err) {
-        console.log(err);
-    }
-
     return score += 1;
 }
 let addRound = () => {
@@ -88,6 +98,31 @@ let clearDirectionAnimations = () => {
     animRight.clear();
     animLeft.clear();
 }
+let mouseCoordinate = () => {
+    console.log(event.clientX)
+}
+
+const circleForEffect = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+
+let effectAnimation = () => {
+    // Need to transform document screen space to svg coordinate space.
+    const svgToTransform = document.getElementById("playArea");
+    let pt = svgToTransform.createSVGPoint();
+    pt.x = event.clientX;
+    pt.y = event.clientY;
+    let svgSpace = pt.matrixTransform(svgToTransform.getScreenCTM().inverse());
+
+    circleForEffect.setAttribute("cx", svgSpace.x);
+    circleForEffect.setAttribute("cy", svgSpace.y);
+    circleForEffect.setAttribute("r", "1.9");
+    circleForEffect.setAttribute("fill", "none");
+    circleForEffect.setAttribute("stroke-width", "1.5");
+    circleForEffect.setAttribute("stroke", "rgb(94, 179, 45)");
+    document.getElementById("playArea").appendChild(circleForEffect);
+    gsap.fromTo(circleForEffect, { scale: 1, opacity: 0.9 }, { scale: 1.6, opacity: 0, ease: "expo:out", transformOrigin: "center center", duration: 0.7 });
+}
+
+// document.window.addEventListener("onClick", effectAnimation());
 
 
 //=========================== Animation section ========================================
@@ -128,12 +163,13 @@ const gameAnimation = (characterToAnimate, occluder) => {
 
     // make character clickable only once per round
     const once = () => {
+        mySound.play();
+        effectAnimation();
         characterToAnimate.removeEventListener("mousedown", once);
         document.getElementById("score").innerHTML = `Score : ${addScore()}`;
         characterFadeOut(characterToAnimate, occluder);
-
     }
-    // provide listener only after character goes behind occluder/blocker
+    // provide listener to animation below only after character goes behind occluder/blocker
     let provideListener = () => {
         characterToAnimate.addEventListener("mousedown", once);
     }
@@ -259,6 +295,7 @@ const createCharacter = (() => {
 
 //<!!!***RECURSIVE THROUGH GAME OVER CHECK FUNCTION***!!!
 gameAnimation(createCharacter(), createOccluder());
+
 
 
 
