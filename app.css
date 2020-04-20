@@ -6,12 +6,12 @@ body{
 }
 
 .gameViewBorder {
-    border:2px solid gray;
+    border:2px solid rgb(85, 85, 85);
 }
 
 #container{
     display: block;
-    width: 85vw;
+    width: 75vw;
     max-width: 177.78vh;
     /* 16/9 = 1.778 */
     height: 56.25vw;
