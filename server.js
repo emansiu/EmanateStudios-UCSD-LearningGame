@@ -35,13 +35,13 @@ app.get('/api', async (req, res) => {
 })
 
 // CREATE NEW DATA ROUND
-app.post('/api', async (req, res) => {
+app.post('/api/subject', async (req, res) => {
 
-    const { name } = req.body;
+    const { number, initials } = req.body;
 
     try {
-        await test.create({
-            name
+        await subject.create({
+            number, initials
         });
         res.status(200).send({ msg: "info uploaded" })
     } catch (err) {
