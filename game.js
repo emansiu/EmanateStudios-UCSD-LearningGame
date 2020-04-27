@@ -1,4 +1,3 @@
-// import axios from 'axios';
 //------- INITIALIZE CORE GLOBAL GAME COMPONENTS-------
 const playArea = document.getElementById("playArea");
 
@@ -8,7 +7,6 @@ let windowWidth = window.innerWidth;
 if (windowWidth < 1320 || windowHeight < 890) {
     alert("Your window screen is too small. Please maximize.")
 }
-// console.log(`${windowWidth} x ${windowHeight}`)
 
 let score = 0;
 const numberOfRounds = 30;
@@ -21,7 +19,6 @@ let moustPosition_CharacterRevealing_x = 0;
 let moustPosition_CharacterRevealing_y = 0;
 let keepPlaying = true;
 
-
 //------ direction animations:
 let animRight = gsap.timeline();
 let animLeft = gsap.timeline();
@@ -29,9 +26,6 @@ let animLeft = gsap.timeline();
 //------ initialze heads up display
 document.getElementById("level").innerHTML = `Level : ${level}/${numberOfLevels}`;
 document.getElementById("score").innerHTML = `Score : ${score}`;
-
-//------ UNCOMMENT TO CONSOLE SCORE
-console.log(`current round: ${currentRound}, level: ${level}, score: ${score}`)
 
 //------ initialize sound
 const soundEffect = document.getElementById("mySound")
@@ -106,13 +100,11 @@ let mouseBeforeHidden = () => {
     let [x, y] = mouseCoordinate_svg();
     moustPosition_CharacterHiding_x = Math.round(x * 100 + Number.EPSILON) / 100;
     moustPosition_CharacterHiding_y = Math.round(y * 100 + Number.EPSILON) / 100;
-    console.log(`${moustPosition_CharacterHiding_x} , ${moustPosition_CharacterHiding_y}`);
 }
 let mouseAfterHidden = () => {
     let [x, y] = mouseCoordinate_svg();
     moustPosition_CharacterRevealing_x = Math.round(x * 100 + Number.EPSILON) / 100;
     moustPosition_CharacterRevealing_y = Math.round(y * 100 + Number.EPSILON) / 100;
-    console.log(`${moustPosition_CharacterRevealing_x} , ${moustPosition_CharacterRevealing_y}`);
 }
 let effectAnimation = () => {
     // Need to transform document screen space to svg coordinate space.
@@ -131,7 +123,6 @@ let effectAnimation = () => {
     document.getElementById("playArea").appendChild(circleForEffect);
     gsap.fromTo(circleForEffect, { scale: 1, opacity: 0.9 }, { scale: 1.6, opacity: 0, ease: "expo:out", transformOrigin: "center center", duration: 0.7 });
 }
-
 //=========================== Animation section ========================================
 //******CHARACTER FADE OUT WHEN CLICKED and delete object when animmation is done
 const characterFadeOut = (characterToFade, occluder) => {
@@ -175,13 +166,6 @@ const gameAnimation = (characterToAnimate, occluder) => {
         characterToAnimate.removeEventListener("mousedown", once);
         document.getElementById("score").innerHTML = `Score : ${addScore()}`;
         characterFadeOut(characterToAnimate, occluder);
-        fetch("http://127.0.0.1:5500/api", {
-            method: 'post',
-            headers: {
-                "Content-type": "application/json; charset=UTF-8"
-            },
-            body: { "name": "Point SCored" }
-        })
     }
     // provide listener to animation below only after character goes behind occluder/blocker
     // also tracking coordinates before character goes behind occluder
@@ -197,7 +181,6 @@ const gameAnimation = (characterToAnimate, occluder) => {
         .to(characterToAnimate, { duration: 0.5, opacity: 0 })
 
 }
-
 //=========================== ELEMENTS TO CREATE ========================================
 const features = {
     eyeColor: [
@@ -212,8 +195,6 @@ const features = {
     // mouthWidth and Height assigned in randomFeature()
     // hornWidth and Height assigned in randomFeature()
 }
-
-
 let randomFeature = () => {
     return {
         eyeColor: features.eyeColor[Math.floor(Math.random() * 2)][Math.floor(Math.random() * 6)],
@@ -225,8 +206,6 @@ let randomFeature = () => {
         mouthHeight: Math.floor(Math.random() * 2) + 1
     }
 }
-
-
 const createOccluder = () => {
 
     let occluder = document.createElementNS("http://www.w3.org/2000/svg", "path");
@@ -240,7 +219,6 @@ const createOccluder = () => {
     document.getElementById("playArea").appendChild(occluder);
     return occluder;
 }
-
 const createCharacter = (() => {
 
     let characterAttributes = randomFeature();
@@ -313,7 +291,6 @@ const createCharacter = (() => {
 
     return (characterGroup)
 });
-
 //<!!!***RECURSIVE THROUGH "checkGameOver = (characterToRemove)" FUNCTION***!!!
 // createCharacter() returns a collection "<g>" of svg elements to attach to parent svg on the game page.
 // createOccluder() returns the occluder object to animate on and off screen per round.
