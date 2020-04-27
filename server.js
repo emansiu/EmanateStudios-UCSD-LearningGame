@@ -1,6 +1,5 @@
 require("dotenv").config();
 const express = require("express");
-// const jwt = require("express-jwt");
 const path = require("path");
 
 const { sequelize, test } = require("./models"); //<--this is actually the database (very confusing way sequelize works but it does. You don't have to specify index.js, it defaults to index)
@@ -12,12 +11,8 @@ const app = express();
 // we'll allow either json or urlencoded requests
 app.use(express.urlencoded({ extended: true })); //Parse URL-encoded bodies
 app.use(express.json({ extended: false })); //Used to parse JSON bodies;
-
 //------------------ ROUTES ----------------------------------
-// // DISCLAIMER
-// app.get('/', (req, res) => {
-//     res.send("Hello there. No need for you to be here. But thanks for stopping by.")
-// })
+
 // GET DATA
 app.get('/api', async (req, res) => {
     const { credentials } = req.body
@@ -79,7 +74,7 @@ sequelize
         console.error("Unable to connect to the database:", err);
     });
 
-sequelize.sync({ force: true });
+// sequelize.sync({ alter: true });
 
 // // //-------------------GET PORT TO LISTEN ON-----------------
 const PORT = process.env.PORT || 5000;
