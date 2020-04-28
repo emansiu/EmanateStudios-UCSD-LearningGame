@@ -11,7 +11,7 @@ let form = document.getElementById('signup')
 
 form.addEventListener('submit', (event) => {
     event.preventDefault();
-    let number = form.elements["number"].value;
+    let number = form.elements["subjectNumber"].value;
     let initials = form.elements["initials"].value;
     console.log(`number: ${number}, initials: ${initials}`);
     window.location.hash = "index";
@@ -20,5 +20,7 @@ form.addEventListener('submit', (event) => {
 console.log(window.location.hostname);
 // animate form on
 let ps = document.getElementsByTagName("form")
+let pTag = document.getElementsByTagName("p")
 
 slideOn(ps);
+slideOn(pTag);

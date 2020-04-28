@@ -85,11 +85,16 @@ button {
     margin-top: 3rem;
 }
 .dropShadow {
-    box-shadow: 0px 10px 10px rgb(81, 82, 81);
+    box-shadow: 0px 10px 10px rgba(81, 82, 81,0.4);
 }
 .textShadow {
-    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.479);
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
 }
 .boderCheck{
     border:10px solid green;
+}
+form {
+    background-color:rgba(200,200,200,0.8);
+    padding:30px;
+    border-radius:5px;
 }
