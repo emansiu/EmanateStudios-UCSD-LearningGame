@@ -17,8 +17,8 @@ module.exports = (sequelize, DataTypes) => {
     horns_w: DataTypes.INTEGER,
     horns_h: DataTypes.INTEGER
   }, {});
-  trial.associate = function(models) {
-    // associations can be defined here
+  trial.associate = function (models) {
+    trial.belongsTo(models.Subject)
   };
   return trial;
 };

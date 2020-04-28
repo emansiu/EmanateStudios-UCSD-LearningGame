@@ -5,22 +5,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- SET DEFAULT CSS -->
-    <link rel="stylesheet" href="reset.css">
+    <link rel="stylesheet" href="../reset.css">
     <!-- IMPORT OUR OWN STYLES -->
-    <link rel="stylesheet" href="app.css">
+    <link rel="stylesheet" href="../app.css">
     <title>UCSD D.O.P.</title>
     <link rel='icon' href='favicon.ico' type='image/x-icon' />
 </head>
 
 <body id="gameMenu">
 
-
+    <div id="assignment" version="2"></div>
     <div class="menuStyle boderCheck">
-        <p class="textShadow">Once you begin there is no pausing.</p>
-        <p class="textShadow">Are you ready?</p>
-        <a href="pages/game.html">
-            <button class="dropShadow">Get Started</button>
-        </a>
+        <form action="signup" method="post" id="signup">
+            <input type="text" name="number" placeholder="number">
+            <input type="text" name="initials" placeholder="initials">
+            <button type="submit">Next</button>
+        </form>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.2.6/gsap.min.js"></script>

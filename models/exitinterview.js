@@ -16,8 +16,8 @@ module.exports = (sequelize, DataTypes) => {
     blur_1_seconds: DataTypes.BOOLEAN,
     blur_2_seconds: DataTypes.BOOLEAN
   }, {});
-  exitInterview.associate = function(models) {
-    // associations can be defined here
+  exitInterview.associate = function (models) {
+    exitInterview.belongsTo(models.Subject)
   };
   return exitInterview;
 };

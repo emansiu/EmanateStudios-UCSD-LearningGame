@@ -21,7 +21,22 @@ module.exports = {
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE
-      }
+      },
+      consent: {
+        type: Sequelize.BOOLEAN
+      },
+      age: {
+        type: Sequelize.INTEGER
+      },
+      gender: {
+        type: Sequelize.STRING
+      },
+      demographic: {
+        type: Sequelize.STRING
+      },
+      timesQuizFailed: {
+        type: Sequelize.INTEGER
+      },
     });
   },
   down: (queryInterface, Sequelize) => {

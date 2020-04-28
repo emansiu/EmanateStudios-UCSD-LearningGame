@@ -2,10 +2,16 @@
 module.exports = (sequelize, DataTypes) => {
   const Subject = sequelize.define('Subject', {
     number: DataTypes.INTEGER,
-    initials: DataTypes.STRING
+    initials: DataTypes.STRING,
+    consent: DataTypes.BOOLEAN,
+    age: DataTypes.INTEGER,
+    gender: DataTypes.STRING,
+    demographic: DataTypes.STRING,
+    timesQuizFailed: DataTypes.INTEGER
   }, {});
-  Subject.associate = function(models) {
-    // associations can be defined here
+  Subject.associate = function (models) {
+    Subject.hasMany(models.trial);
+    Subject.hasOne(models.exitInterview)
   };
   return Subject;
 };
