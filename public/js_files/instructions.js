@@ -9,12 +9,20 @@ let slideOff = (objectToRemove) => {
 // get form
 let form = document.getElementById('signup')
 
-form.addEventListener('submit', (event) => {
+form.addEventListener('submit', async (event) => {
     event.preventDefault();
     let number = form.elements["subjectNumber"].value;
     let initials = form.elements["initials"].value;
-    console.log(`number: ${number}, initials: ${initials}`);
-    window.location.hash = "index";
+    let data = { number, initials }
+
+    const options = {
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers: { 'Content-Type': 'application/json' }
+    }
+    await fetch('/api/subject', options)
+
+    window.location.href = "/pages/game.html";
 });
 
 console.log(window.location.hostname);

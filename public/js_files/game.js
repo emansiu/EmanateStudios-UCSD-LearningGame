@@ -13,10 +13,10 @@ const numberOfRounds = 30;
 const numberOfLevels = 6;
 let currentRound = 1;
 let level = 1;
-let moustPosition_CharacterHiding_x = 0;
-let moustPosition_CharacterHiding_y = 0;
-let moustPosition_CharacterRevealing_x = 0;
-let moustPosition_CharacterRevealing_y = 0;
+let cursorX_enterOccluder = 0;
+let cursorY_enterOccluder = 0;
+let cursorX_exitOccluder = 0;
+let cursorY_exitOccluder = 0;
 let keepPlaying = true;
 
 //------ direction animations:
@@ -47,6 +47,16 @@ let removeElement = (elementToRemove) => {
     elementToRemove.remove()
 }
 let checkGameOver = (characterToRemove) => {
+    // POST ROUND TO DATABASE
+    let data = { score, cursorX_enterOccluder, cursorY_enterOccluder, cursorX_exitOccluder, cursorY_exitOccluder }
+    const options = {
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers: { 'Content-Type': 'application/json' }
+    }
+    fetch('/api/trial', options)
+
+    // PERFORM ROUND LOGIC
     if (level === numberOfLevels && currentRound === numberOfRounds) {
         keepPlaying = false;
         alert('thanks for playing, you are all done!')
@@ -98,13 +108,13 @@ let mouseCoordinate_svg = () => {
 }
 let mouseBeforeHidden = () => {
     let [x, y] = mouseCoordinate_svg();
-    moustPosition_CharacterHiding_x = Math.round(x * 100 + Number.EPSILON) / 100;
-    moustPosition_CharacterHiding_y = Math.round(y * 100 + Number.EPSILON) / 100;
+    cursorX_enterOccluder = Math.round(x * 100 + Number.EPSILON) / 100;
+    cursorY_enterOccluder = Math.round(y * 100 + Number.EPSILON) / 100;
 }
 let mouseAfterHidden = () => {
     let [x, y] = mouseCoordinate_svg();
-    moustPosition_CharacterRevealing_x = Math.round(x * 100 + Number.EPSILON) / 100;
-    moustPosition_CharacterRevealing_y = Math.round(y * 100 + Number.EPSILON) / 100;
+    cursorX_exitOccluder = Math.round(x * 100 + Number.EPSILON) / 100;
+    cursorY_exitOccluder = Math.round(y * 100 + Number.EPSILON) / 100;
 }
 let effectAnimation = () => {
     // Need to transform document screen space to svg coordinate space.

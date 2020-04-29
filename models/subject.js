@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
     timesQuizFailed: DataTypes.INTEGER
   }, {});
   Subject.associate = function (models) {
-    Subject.hasMany(models.trial);
+    Subject.hasMany(models.Trial);
     Subject.hasOne(models.exitInterview)
   };
   return Subject;

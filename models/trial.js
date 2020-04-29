@@ -1,6 +1,6 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
-  const trial = sequelize.define('trial', {
+  const Trial = sequelize.define('Trial', {
     trial: DataTypes.INTEGER,
     score: DataTypes.INTEGER,
     condition: DataTypes.INTEGER,
@@ -17,8 +17,8 @@ module.exports = (sequelize, DataTypes) => {
     horns_w: DataTypes.INTEGER,
     horns_h: DataTypes.INTEGER
   }, {});
-  trial.associate = function (models) {
-    trial.belongsTo(models.Subject)
+  Trial.associate = function (models) {
+    Trial.belongsTo(models.Subject)
   };
-  return trial;
+  return Trial;
 };

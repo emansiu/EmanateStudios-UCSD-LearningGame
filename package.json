@@ -11,9 +11,15 @@
     "type": "git",
     "url": "git+https://github.com/emansiu/EmanateStudios-UCSD-LearningGame.git"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "learning",
+    "data",
+    "game",
+    "predictor",
+    "prediction"
+  ],
+  "author": "Emanuel Siu",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/emansiu/EmanateStudios-UCSD-LearningGame/issues"
   },

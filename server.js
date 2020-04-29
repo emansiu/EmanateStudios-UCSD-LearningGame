@@ -2,7 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const path = require("path");
 
-const { sequelize, test } = require("./models"); //<--this is actually the database (very confusing way sequelize works but it does. You don't have to specify index.js, it defaults to index)
+const { sequelize, Subject, exitInterview, Trial } = require("./models"); //<--this is actually the database (very confusing way sequelize works but it does. You don't have to specify index.js, it defaults to index)
 
 const app = express();
 
@@ -34,16 +34,34 @@ app.get('/api', async (req, res) => {
     }
 })
 
-// CREATE NEW DATA ROUND
+// CREATE NEW DATA SUBJECT
 app.post('/api/subject', async (req, res) => {
 
     const { number, initials } = req.body;
 
     try {
-        await subject.create({
+        // first create new subject
+        await Subject.create({
             number, initials
         });
-        res.status(200).send({ msg: "info uploaded" })
+
+        res.status(200).send({ msg: "Subject Added Successfully" })
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error')
+    }
+});
+app.post('/api/trial', async (req, res) => {
+
+    const { trial, score, condition, cursorX_exitOccluder, cursorY_exitOccluder, cursorX_enterOccluder, cursorY_enterOccluder, success, bg_color, eye_size, eye_color, mouth_w, mouth_h, horns_w, horns_h, SubjectId } = req.body;
+
+    try {
+        // first create new subject
+        await Trial.create({
+            trial, score, condition, cursorX_exitOccluder, cursorY_exitOccluder, cursorX_enterOccluder, cursorY_enterOccluder, success, bg_color, eye_size, eye_color, mouth_w, mouth_h, horns_w, horns_h, SubjectId
+        });
+
+        res.status(200).send({ msg: "Trial Round Successfully" })
     } catch (err) {
         console.error(err.message);
         res.status(500).send('Server Error')
@@ -51,7 +69,7 @@ app.post('/api/subject', async (req, res) => {
 });
 
 
-// ---SERVE STATIC ASSETS FOR PRODUCTION -----
+// ---SERVE STATIC ASSETS FOR PRODUCTION AND DEV-----
 if (process.env.NODE_ENV === "production") {
     // set static folder. __dirname if file is in root
     app.use(express.static(__dirname));
@@ -60,6 +78,8 @@ if (process.env.NODE_ENV === "production") {
     app.get("/", (req, res) => {
         res.sendFile(path.resolve(__dirname, "index.html"));
     })
+} else {
+    app.use(express.static('public'))
 }
 
 
