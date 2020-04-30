@@ -1,29 +1,21 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('subjects', {
-      UID: {
+    return queryInterface.createTable('demographics', {
+      id: {
         allowNull: false,
+        autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.UUID
+        type: Sequelize.INTEGER
       },
-      startTime_consent: {
-        type: Sequelize.DATE
+      age: {
+        type: Sequelize.INTEGER
       },
-      endTime_consent: {
-        type: Sequelize.DATE
-      },
-      firstName: {
+      gender: {
         type: Sequelize.STRING
       },
-      lastName: {
+      demographic: {
         type: Sequelize.STRING
-      },
-      email: {
-        type: Sequelize.STRING
-      },
-      wantsConsentEmailed: {
-        type: Sequelize.BOOLEAN
       },
       createdAt: {
         allowNull: false,
@@ -32,10 +24,10 @@ module.exports = {
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE
-      },
+      }
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('subjects');
+    return queryInterface.dropTable('demographics');
   }
 };

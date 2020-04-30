@@ -2,7 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const path = require("path");
 
-const { sequelize, Subject, exitInterview, Trial } = require("./models"); //<--this is actually the database (very confusing way sequelize works but it does. You don't have to specify index.js, it defaults to index)
+const { sequelize, subject, exitInterview, trial, quiz } = require("./models"); //<--this is actually the database (very confusing way sequelize works but it does. You don't have to specify index.js, it defaults to index)
 
 const app = express();
 
@@ -13,16 +13,16 @@ app.use(express.urlencoded({ extended: true })); //Parse URL-encoded bodies
 app.use(express.json({ extended: false })); //Used to parse JSON bodies;
 //------------------ ROUTES ----------------------------------
 
-// GET DATA
-app.get('/api', async (req, res) => {
+//================ALL THE GET DATA================
+app.get('/api/subject', async (req, res) => {
     const { credentials } = req.body
 
     if (credentials === process.env.DB_SK) {
         try {
-            let UserData = await test.findAll();
+            let UserData = await subject.findAll();
 
             if (UserData) {
-                return res.status(400).json({ UserData }).send("Successful Retrieval");
+                return res.status(400).json({ UserData }).send("Successful Retrieval of Subjects");
             }
         }
         catch (err) {
@@ -34,15 +34,53 @@ app.get('/api', async (req, res) => {
     }
 })
 
-// CREATE NEW DATA SUBJECT
-app.post('/api/subject', async (req, res) => {
 
-    const { number, initials } = req.body;
+
+
+//================ALL THE POST DATA================
+// CREATE EXIT INTERVIEW
+app.post('/api/exit', async (req, res) => {
+
+    const { finish_date_time, condition, hunch1, hunch1_level, hunch2, hunch2_level, hunch3, hunch3_level, has_hunch, last_action, completed_block_100percent_after_trial, aborted, blur_1_seconds, blur_2_seconds } = req.body;
 
     try {
         // first create new subject
-        await Subject.create({
-            number, initials
+        await exitInterview.create({
+            finish_date_time, condition, hunch1, hunch1_level, hunch2, hunch2_level, hunch3, hunch3_level, has_hunch, last_action, completed_block_100percent_after_trial, aborted, blur_1_seconds, blur_2_seconds
+        });
+
+        res.status(200).send({ msg: "Exit Interview Added Successfully" })
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error')
+    }
+});
+// CREATE QUIZ TABLE
+app.post('/api/quiz', async (req, res) => {
+
+    const { startTime_quiz, endTime_quiz } = req.body;
+
+    try {
+        // first create new subject
+        await quiz.create({
+            startTime_quiz, endTime_quiz
+        });
+
+        res.status(200).send({ msg: "Quiz Added Successfully" })
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error')
+    }
+});
+// CREATE NEW DATA SUBJECT
+app.post('/api/subject', async (req, res) => {
+
+    const { startTime_consent, endTime_consent, firstName, lastName, email, wantsConsentEmailed } = req.body;
+
+    try {
+        // first create new subject
+        await subject.create({
+            startTime_consent, endTime_consent, firstName, lastName, email, wantsConsentEmailed
         });
 
         res.status(200).send({ msg: "Subject Added Successfully" })
@@ -51,14 +89,15 @@ app.post('/api/subject', async (req, res) => {
         res.status(500).send('Server Error')
     }
 });
+// CREATE NEW TRIAL ASSIGNED TO SUBJECT
 app.post('/api/trial', async (req, res) => {
 
-    const { trial, score, condition, cursorX_exitOccluder, cursorY_exitOccluder, cursorX_enterOccluder, cursorY_enterOccluder, success, bg_color, eye_size, eye_color, mouth_w, mouth_h, horns_w, horns_h, SubjectId } = req.body;
+    const { trialIteration, score, condition, cursorX_exitOccluder, cursorY_exitOccluder, cursorX_enterOccluder, cursorY_enterOccluder, success, bg_color, eye_size, eye_color, mouth_w, mouth_h, horns_w, horns_h, SubjectId } = req.body;
 
     try {
         // first create new subject
-        await Trial.create({
-            trial, score, condition, cursorX_exitOccluder, cursorY_exitOccluder, cursorX_enterOccluder, cursorY_enterOccluder, success, bg_color, eye_size, eye_color, mouth_w, mouth_h, horns_w, horns_h, SubjectId
+        await trial.create({
+            trialIteration, score, condition, cursorX_exitOccluder, cursorY_exitOccluder, cursorX_enterOccluder, cursorY_enterOccluder, success, bg_color, eye_size, eye_color, mouth_w, mouth_h, horns_w, horns_h, SubjectId
         });
 
         res.status(200).send({ msg: "Trial Round Successfully" })
@@ -94,7 +133,7 @@ sequelize
         console.error("Unable to connect to the database:", err);
     });
 
-// sequelize.sync({ alter: true });
+sequelize.sync({ force: true });
 
 // // //-------------------GET PORT TO LISTEN ON-----------------
 const PORT = process.env.PORT || 5000;

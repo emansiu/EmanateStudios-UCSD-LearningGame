@@ -1,17 +1,24 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
-  const Subject = sequelize.define('Subject', {
-    number: DataTypes.INTEGER,
-    initials: DataTypes.STRING,
-    consent: DataTypes.BOOLEAN,
-    age: DataTypes.INTEGER,
-    gender: DataTypes.STRING,
-    demographic: DataTypes.STRING,
-    timesQuizFailed: DataTypes.INTEGER
+  const subject = sequelize.define('subject', {
+    UID: {
+      primaryKey: true,
+      unique: true,
+      allowNull: false,
+      type: DataTypes.UUID,
+      defaultValue: require("sequelize").UUIDV4
+    },
+    startTime_consent: DataTypes.DATE,
+    endTime_consent: DataTypes.DATE,
+    firstName: DataTypes.STRING,
+    lastName: DataTypes.STRING,
+    email: DataTypes.STRING,
+    wantsConsentEmailed: DataTypes.BOOLEAN
   }, {});
-  Subject.associate = function (models) {
-    Subject.hasMany(models.Trial);
-    Subject.hasOne(models.exitInterview)
+  subject.associate = function (models) {
+    subject.hasMany(models.trial);
+    subject.hasOne(models.exitInterview)
+    subject.hasMany(models.quiz)
   };
-  return Subject;
+  return subject;
 };
