@@ -75,11 +75,10 @@ app.post('/api/subject', async (req, res) => {
 
     try {
         // first create new subject
-        await subject.create({
+        const newSubject = await subject.create({
             startTime_consent, endTime_consent, firstName, lastName, email, wantsConsentEmailed
         });
-
-        res.status(200).send({ msg: "Subject Added Successfully" })
+        res.status(200).json({ subject: newSubject.UID })
     } catch (err) {
         console.error(err.message);
         res.status(500).send('Server Error')

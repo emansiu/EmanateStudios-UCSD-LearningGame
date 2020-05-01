@@ -1,17 +1,27 @@
-
+/* set variable for size multiplier applied to screen size */
+:root {
+    --sizeMultiplier:1.3;
+    --formBackGroundColor: rgba(225,225,225,0.8);
+    --gradientOne:33, 74, 117;
+    --gradientTwo:33, 58, 107;
+    --buttonColorOne:38, 99, 31;
+    --buttonColorTwo:42, 130, 33;
+}
 body{
     display:block;
     padding:2px;
     background-color:gray;
 }
-
+hr{
+    border-top:1px solid rgba(0,0,0,0.5);
+    border-bottom:0px;
+    text-decoration: none;
+    width:100%;
+}
 .gameViewBorder {
     border:2px solid rgb(85, 85, 85);
 }
-/* set variable for size multiplier applied to screen size */
-:root {
-    --sizeMultiplier:1.3;
-}
+
 #container{
     display: relative;
     margin:auto;
@@ -29,7 +39,9 @@ body{
    font-size: 20px;
    color: white;
 }
+/*------------------END GAME SIZE STYLES--------------------- */
 
+/*--------------- CORE STYLES --------------------------*/
 text {
     font-size:0.1rem;
     -webkit-touch-callout: none; /* iOS Safari */
@@ -40,7 +52,16 @@ text {
               user-select: none; /* Non-prefixed version, currently
                                     supported by Chrome, Opera and Firefox */
 }
-
+p{
+    font-size: 1.3rem;
+    line-height: 2.0rem;
+    margin-top:0.5rem;
+}
+h2{
+    font-size: 1.5rem;
+    line-height: 2.0rem;
+    margin-top:0.5rem;
+}
 svg{
     background-color:rgb(238, 238, 238);
 }
@@ -48,17 +69,17 @@ html{
     height:100%;
 }
 #gameMenu{
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-    background-size: cover;
+    -webkit-background-size: auto;
+    -moz-background-size: auto;
+    -o-background-size: auto;
+    background-size: auto;
     background: '#70bg32';
     background-repeat:no-repeat;
-    background: -webkit-linear-gradient( to left top, rgb(124, 124, 168), rgb(58, 153, 170)); 
-    background: -moz-linear-gradient( to left top, rgb(124, 124, 168), rgb(58, 153, 170)); 
-    background: -ms-linear-gradient( to left top, rgb(124, 124, 168), rgb(58, 153, 170)); 
-    background: -o-linear-gradient( to left top, rgb(124, 124, 168), rgb(58, 153, 170)); 
-    background: linear-gradient( to left top, rgb(124, 124, 168), rgb(58, 153, 170)); 
+    background: -webkit-linear-gradient( to left top, rgb(var(--gradientOne)), rgb(var(--gradientTwo))); 
+    background: -moz-linear-gradient( to left top, rgb(var(--gradientOne)), rgb(var(--gradientTwo)));  
+    background: -ms-linear-gradient( to left top, rgb(var(--gradientOne)), rgb(var(--gradientTwo))); 
+    background: -o-linear-gradient( to left top, rgb(var(--gradientOne)), rgb(var(--gradientTwo))); 
+    background: linear-gradient( to left top, rgb(var(--gradientOne)), rgb(var(--gradientTwo))) fixed; 
 }
 .menuStyle{
     height:100vh;
@@ -72,20 +93,12 @@ html{
     color:white;
     margin:0.7rem;
 }
-button {
-    background-color: rgb(129, 172, 60); /* Green */
-    border-radius: 5px;
-    border: none;
-    color: white;
-    padding: 0.7rem 2rem;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 2rem;
-    margin-top: 3rem;
-}
+
 .dropShadow {
     box-shadow: 0px 10px 10px rgba(81, 82, 81,0.4);
+}
+.sideShadows {
+    box-shadow: 0px 0px 100px rgba(81, 82, 81,0.5);
 }
 .textShadow {
     text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
@@ -93,8 +106,64 @@ button {
 .boderCheck{
     border:10px solid green;
 }
+.contentContainer{
+    padding:1em 6em;
+    display: relative;
+    margin:auto;
+    width: 60vw;
+    display:grid;
+    justify-content: center;
+}
+.contentContainer img{
+    justify-self: center;
+}
+.bgGray {
+    background-color:var(--formBackGroundColor);
+}
+
+/* ===================== FORM STYLING ======================== */
 form {
-    background-color:rgba(200,200,200,0.8);
+    background-color:var(--formBackGroundColor);
     padding:30px;
     border-radius:5px;
+    box-shadow: 0px 0px 30px rgba(81, 82, 81,0.4);
+    font-size: 1.3rem
+}
+form input{
+    border-radius:5px;
+    box-shadow: 5px 5px 10px rgba(100,100,100,0.2);
+    align-self: center;
+}
+.checkRadio{
+    position:relative;
+    top:0.2em;
+    margin:0.5rem;
+    height: 25px;
+    width: 25px;
+    background-color:white;
+}
+button {
+    background: linear-gradient( to left top, rgb(var(--buttonColorOne)), rgb(var(--buttonColorTwo))); 
+    border-radius: 5px;
+    border: 2px rgba(225,225,225,0.8) solid;
+    color: white;
+    padding: 0.7rem 2rem;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 1.6rem;
+    margin-top: 3rem;
+}
+
+button:hover {
+    background: linear-gradient( to left top, rgb(var(--buttonColorTwo)), rgb(var(--buttonColorTwo))); 
+    border-radius: 5px;
+    border: 2px rgba(225,225,225,0.5) solid;
+    color: white;
+    padding: 0.7rem 2rem;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 1.6rem;
+    margin-top: 3rem;
 }
