@@ -123,10 +123,10 @@ app.post('/api/trial', async (req, res) => {
 // ---SERVE STATIC ASSETS FOR PRODUCTION AND DEV-----
 if (process.env.NODE_ENV === "production") {
     // set static folder. __dirname if file is in root
-    app.use(express.static(__dirname));
+    app.use(express.static("public"));
 
     // Now assign the file to use to land on
-    app.get("/", (req, res) => {
+    app.get("*", (req, res) => {
         res.sendFile(path.resolve(__dirname, "public", "index.html"));
     })
 } else {
