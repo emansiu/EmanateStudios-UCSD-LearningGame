@@ -282,7 +282,6 @@ const createCharacter = (() => {
         horns_w: characterAttributes.hornWidth,
         horns_h: characterAttributes.hornHeight
     }
-    console.log(currentRoundFeatures);
 
     // create g tag (group that holds all pieces of character)
     let characterGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
