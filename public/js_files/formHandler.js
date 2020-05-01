@@ -8,7 +8,13 @@ let slideOff = (objectToRemove) => {
 
 //================== INITIAL VARIABLES / FUNCTIONS ======================
 let timeOnPageLoad = moment().format('YYYY-MM-DD h:mm:ss.ms'); //<--recorded as soon as page is loaded
-const gameVersion = document.getElementById("gameMenu").getAttribute("assignment")
+
+let getGameVersion = () => {
+    if (localStorage.getItem("gameVersion") == null) {
+        return document.getElementById("gameMenu").getAttribute("assignment");
+    }
+    return ""
+}
 // ACQUIRE ALL FORMS FROM PAGE
 // DOM elements need to be assigned to array first 
 let AllForms = [...document.getElementsByTagName("form")]
@@ -17,6 +23,7 @@ let AllForms = [...document.getElementsByTagName("form")]
 AllForms.forEach(form => {
 
     switch (form.getAttribute("id")) {
+        // --------------CONSENT FORM ------------------
         case 'consent':
             form.addEventListener('submit', async (event) => {
                 event.preventDefault();
@@ -31,7 +38,7 @@ AllForms.forEach(form => {
                 }
 
                 // add version to local storage on client system
-                localStorage.setItem("gameVersion", gameVersion)
+                localStorage.setItem("gameVersion", getGameVersion())
                 const options = {
                     method: 'POST',
                     body: JSON.stringify(data),
@@ -39,15 +46,69 @@ AllForms.forEach(form => {
                 }
                 const newUser = await fetch('/api/subject', options)
                 const returnedData = await newUser.json();
-                // console.log(JSON.parse(newUser).UID);
-                localStorage.setItem("subject", returnedData.subject)
-
-                // window.location.href = "/pages/v1.html";
+                localStorage.setItem("subject", returnedData.subject)//<--temporarily provide persisted data to local storage. Removed on errors or at end of game.
+                window.location.href = "/pages/demographics.html";
             });
             break;
-        case '2':
-            console.log('doing 2 too')
+        // --------------DEMOGRAPHICS FORM ------------------
+        case 'demographics':
+            form.addEventListener('submit', async (event) => {
+                event.preventDefault();
+
+                let data = {
+                    age: form.elements["age"].value,
+                    gender: form.elements["gender"].value,
+                    demographic: form.elements["demographic"].value
+                }
+                const options = {
+                    method: 'POST',
+                    body: JSON.stringify(data),
+                    headers: { 'Content-Type': 'application/json' }
+                }
+                await fetch('/api/demographic', options)
+                window.location.href = "/pages/instructions.html";
+            });
             break;
+        // --------------QUIZ FORM ------------------
+        case 'quiz':
+            form.addEventListener('submit', async (event) => {
+                event.preventDefault();
+
+                let data = {
+                    startTime_quiz: timeOnPageLoad,
+                    endTime_quiz: moment().format('YYYY-MM-DD h:mm:ss.ms'),
+                    subjectUID: localStorage.getItem("subject")
+                }
+                const options = {
+                    method: 'POST',
+                    body: JSON.stringify(data),
+                    headers: { 'Content-Type': 'application/json' }
+                }
+                if (form.elements["q1"].value === "2" &&
+                    form.elements["q2"].value === "3" &&
+                    form.elements["q3"].value === "1" &&
+                    form.elements["q4"].value === "2" &&
+                    form.elements["q5"].value === "2" &&
+                    form.elements["q6"].value === "3") {
+                    try {
+                        await fetch('/api/quiz', options)
+                        window.location.href = "/pages/game.html";
+                    } catch (err) {
+                        console.error(err)
+                    }
+                } else {
+                    try {
+                        await fetch('/api/quiz', options)
+                        window.location.href = "/pages/failedInstructions.html";
+                    } catch (err) {
+                        console.error(err);
+                    }
+                }
+
+
+            });
+            break;
+
         default:
         //do nothing
     }
@@ -58,6 +119,8 @@ AllForms.forEach(form => {
 // animate form on
 let ps = document.getElementsByTagName("form")
 let pTag = document.getElementsByTagName("p")
+let h2Tag = document.getElementsByTagName("h2")
 
 slideOn(ps);
 slideOn(pTag);
+slideOn(h2Tag);

@@ -2,7 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const path = require("path");
 
-const { sequelize, subject, exitInterview, trial, quiz } = require("./models"); //<--this is actually the database (very confusing way sequelize works but it does. You don't have to specify index.js, it defaults to index)
+const { sequelize, subject, exitInterview, trial, quiz, demographics } = require("./models"); //<--this is actually the database (very confusing way sequelize works but it does. You don't have to specify index.js, it defaults to index)
 
 const app = express();
 // ------------MIDDLEWARE--------------
@@ -34,6 +34,38 @@ app.get('/api/subject', async (req, res) => {
 })
 
 //================ALL THE POST DATA================
+// CREATE NEW DATA SUBJECT
+app.post('/api/subject', async (req, res) => {
+
+    const { startTime_consent, endTime_consent, firstName, lastName, email, wantsConsentEmailed } = req.body;
+
+    try {
+        // first create new subject
+        const newSubject = await subject.create({
+            startTime_consent, endTime_consent, firstName, lastName, email, wantsConsentEmailed
+        });
+        res.status(200).json({ subject: newSubject.UID })
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error')
+    }
+});
+// CREATE NEW DEMOGRAPHIC
+app.post('/api/demographic', async (req, res) => {
+
+    const { age, gender, demographic } = req.body;
+
+    try {
+        // first create new subject
+        const newSubject = await demographics.create({
+            age, gender, demographic
+        });
+        res.status(200).json({ subject: newSubject.UID })
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error')
+    }
+});
 // CREATE EXIT INTERVIEW
 app.post('/api/exit', async (req, res) => {
 
@@ -54,31 +86,15 @@ app.post('/api/exit', async (req, res) => {
 // CREATE QUIZ TABLE
 app.post('/api/quiz', async (req, res) => {
 
-    const { startTime_quiz, endTime_quiz } = req.body;
+    const { startTime_quiz, endTime_quiz, subjectUID } = req.body;
 
     try {
         // first create new subject
         await quiz.create({
-            startTime_quiz, endTime_quiz
+            startTime_quiz, endTime_quiz, subjectUID
         });
 
         res.status(200).send({ msg: "Quiz Added Successfully" })
-    } catch (err) {
-        console.error(err.message);
-        res.status(500).send('Server Error')
-    }
-});
-// CREATE NEW DATA SUBJECT
-app.post('/api/subject', async (req, res) => {
-
-    const { startTime_consent, endTime_consent, firstName, lastName, email, wantsConsentEmailed } = req.body;
-
-    try {
-        // first create new subject
-        const newSubject = await subject.create({
-            startTime_consent, endTime_consent, firstName, lastName, email, wantsConsentEmailed
-        });
-        res.status(200).json({ subject: newSubject.UID })
     } catch (err) {
         console.error(err.message);
         res.status(500).send('Server Error')
@@ -101,6 +117,7 @@ app.post('/api/trial', async (req, res) => {
         res.status(500).send('Server Error')
     }
 });
+
 
 
 // ---SERVE STATIC ASSETS FOR PRODUCTION AND DEV-----
