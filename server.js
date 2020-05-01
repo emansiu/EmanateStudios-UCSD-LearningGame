@@ -5,7 +5,6 @@ const path = require("path");
 const { sequelize, subject, exitInterview, trial, quiz } = require("./models"); //<--this is actually the database (very confusing way sequelize works but it does. You don't have to specify index.js, it defaults to index)
 
 const app = express();
-
 // ------------MIDDLEWARE--------------
 // ------------------------------------------------------
 // we'll allow either json or urlencoded requests
@@ -19,10 +18,10 @@ app.get('/api/subject', async (req, res) => {
 
     if (credentials === process.env.DB_SK) {
         try {
-            let UserData = await subject.findAll();
+            let Subjects = await subject.findAll();
 
-            if (UserData) {
-                return res.status(400).json({ UserData }).send("Successful Retrieval of Subjects");
+            if (Subjects) {
+                return res.status(400).json({ Subjects })
             }
         }
         catch (err) {
@@ -30,12 +29,9 @@ app.get('/api/subject', async (req, res) => {
             res.status(500).send('Server Error')
         }
     } else {
-        res.status(500).send('Server Error')
+        res.status(500).send('Not authorized for this route')
     }
 })
-
-
-
 
 //================ALL THE POST DATA================
 // CREATE EXIT INTERVIEW
@@ -133,7 +129,7 @@ sequelize
         console.error("Unable to connect to the database:", err);
     });
 
-sequelize.sync({ force: true });
+// sequelize.sync({ force: true });
 
 // // //-------------------GET PORT TO LISTEN ON-----------------
 const PORT = process.env.PORT || 5000;
