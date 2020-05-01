@@ -127,7 +127,7 @@ if (process.env.NODE_ENV === "production") {
 
     // Now assign the file to use to land on
     app.get("/", (req, res) => {
-        res.sendFile(path.resolve(__dirname, "index.html"));
+        res.sendFile(path.resolve(__dirname, "public", "index.html"));
     })
 } else {
     app.use(express.static('public'))
