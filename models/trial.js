@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
     cursorY_enterOccluder: DataTypes.FLOAT,
     success: DataTypes.INTEGER,
     bg_color: DataTypes.STRING,
-    eye_size: DataTypes.INTEGER,
+    eye_size: DataTypes.FLOAT,
     eye_color: DataTypes.STRING,
     mouth_w: DataTypes.INTEGER,
     mouth_h: DataTypes.INTEGER,

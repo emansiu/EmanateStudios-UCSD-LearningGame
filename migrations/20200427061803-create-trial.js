@@ -36,7 +36,7 @@ module.exports = {
         type: Sequelize.STRING
       },
       eye_size: {
-        type: Sequelize.INTEGER
+        type: Sequelize.FLOAT
       },
       eye_color: {
         type: Sequelize.STRING

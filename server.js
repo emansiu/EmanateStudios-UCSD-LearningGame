@@ -103,12 +103,12 @@ app.post('/api/quiz', async (req, res) => {
 // CREATE NEW TRIAL ASSIGNED TO SUBJECT
 app.post('/api/trial', async (req, res) => {
 
-    const { trialIteration, score, condition, cursorX_exitOccluder, cursorY_exitOccluder, cursorX_enterOccluder, cursorY_enterOccluder, success, bg_color, eye_size, eye_color, mouth_w, mouth_h, horns_w, horns_h, SubjectId } = req.body;
+    const { trialIteration, score, condition, cursorX_exitOccluder, cursorY_exitOccluder, cursorX_enterOccluder, cursorY_enterOccluder, success, bg_color, eye_size, eye_color, mouth_w, mouth_h, horns_w, horns_h, subjectUID } = req.body;
 
     try {
         // first create new subject
         await trial.create({
-            trialIteration, score, condition, cursorX_exitOccluder, cursorY_exitOccluder, cursorX_enterOccluder, cursorY_enterOccluder, success, bg_color, eye_size, eye_color, mouth_w, mouth_h, horns_w, horns_h, SubjectId
+            trialIteration, score, condition, cursorX_exitOccluder, cursorY_exitOccluder, cursorX_enterOccluder, cursorY_enterOccluder, success, bg_color, eye_size, eye_color, mouth_w, mouth_h, horns_w, horns_h, subjectUID
         });
 
         res.status(200).send({ msg: "Trial Round Successfully" })

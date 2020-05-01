@@ -9,6 +9,7 @@ if (windowWidth < 1320 || windowHeight < 890) {
 }
 
 let score = 0;
+let trialIteration = 0;
 const numberOfRounds = 30;
 const numberOfLevels = 6;
 let currentRound = 1;
@@ -18,6 +19,17 @@ let cursorY_enterOccluder = 0;
 let cursorX_exitOccluder = 0;
 let cursorY_exitOccluder = 0;
 let keepPlaying = true;
+let success = false;
+// attributes to send to database:
+let currentRoundFeatures = {
+    bg_color: '',
+    eye_size: '',
+    eye_color: '',
+    mouth_w: '',
+    mouth_h: '',
+    horns_w: '',
+    horns_h: ''
+}
 
 //------ direction animations:
 let animRight = gsap.timeline();
@@ -35,7 +47,11 @@ const circleForEffect = document.createElementNS("http://www.w3.org/2000/svg", "
 
 //=========================== GAME FUNCTIONS ========================================
 let addScore = () => {
+    success = true;
     return score += 1;
+}
+let addTrialIteration = () => {
+    return trialIteration += 1;
 }
 let addRound = () => {
     return currentRound += 1;
@@ -48,7 +64,20 @@ let removeElement = (elementToRemove) => {
 }
 let checkGameOver = (characterToRemove) => {
     // POST ROUND TO DATABASE
-    let data = { score, cursorX_enterOccluder, cursorY_enterOccluder, cursorX_exitOccluder, cursorY_exitOccluder }
+    let data = {
+        trialIteration: addTrialIteration(),
+        success: success ? 1 : 0,
+        condition: localStorage.getItem("gameVersion") === "version1" ? 1 : 2,
+        bg_color: currentRoundFeatures.bg_color,
+        eye_size: currentRoundFeatures.eye_size,
+        eye_color: currentRoundFeatures.eye_color,
+        mouth_w: currentRoundFeatures.mouth_w,
+        mouth_h: currentRoundFeatures.mouth_h,
+        horns_w: currentRoundFeatures.horns_w,
+        horns_h: currentRoundFeatures.horns_h,
+        subjectUID: localStorage.getItem("subject"),
+        cursorX_enterOccluder, cursorY_enterOccluder, cursorX_exitOccluder, cursorY_exitOccluder, score,
+    }
     const options = {
         method: 'POST',
         body: JSON.stringify(data),
@@ -156,19 +185,30 @@ const animateLeft = (characterToAnimate, occluder) => {
     animLeft.to(characterToAnimate, { duration: 0.5, x: -46.5, y: -30, ease: "none" })
     animLeft.to(occluder, { duration: 1, y: 2, opacity: 0, scale: 1.1, transformOrigin: "center center", onComplete: checkGameOver, onCompleteParams: [characterToAnimate] }, "+=0.5")
 }
-//******MAIN GAME ANIMATION
+//******MAIN GAME ANIMATION (CLICK CHECK INITIATES IN HERE)*****
 const gameAnimation = (characterToAnimate, occluder) => {
+    success = false; //<-- need to reset this every round
 
     let eyeSize = characterToAnimate.childNodes[2].getAttribute("r")
 
     let directionToAnimate = () => {
-        if (eyeSize == "1.6") {
-            return animateRight(characterToAnimate, occluder);
-        } else {
-            return animateLeft(characterToAnimate, occluder);
+        //---------- Random Direction -----------
+        if (localStorage.getItem("gameVersion") === "version1") {
+            if (Math.random() >= 0.5) {
+                return animateRight(characterToAnimate, occluder);
+            } else {
+                return animateLeft(characterToAnimate, occluder);
+            }
+        } else
+        //---------- Dictated by eye size -----------
+        {
+            if (eyeSize == "1.6") {
+                return animateRight(characterToAnimate, occluder);
+            } else {
+                return animateLeft(characterToAnimate, occluder);
+            }
         }
     }
-
     // make character clickable only once per round
     const once = () => {
         soundEffect.play();
@@ -232,6 +272,17 @@ const createOccluder = () => {
 const createCharacter = (() => {
 
     let characterAttributes = randomFeature();
+
+    currentRoundFeatures = {
+        bg_color: characterAttributes.bodyColor,
+        eye_size: characterAttributes.eyeSize,
+        eye_color: characterAttributes.eyeColor,
+        mouth_w: characterAttributes.mouthWidth,
+        mouth_h: characterAttributes.mouthHeight,
+        horns_w: characterAttributes.hornWidth,
+        horns_h: characterAttributes.hornHeight
+    }
+    console.log(currentRoundFeatures);
 
     // create g tag (group that holds all pieces of character)
     let characterGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
