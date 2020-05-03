@@ -50,9 +50,9 @@ let timedMessage = (text, timeToDelay) => {
     let pElement = document.createElement('p');
     let message = document.createTextNode(text);
     pElement.appendChild(message);
-    document.getElementById("container").appendChild(pElement)
+    document.getElementById("timer").appendChild(pElement)
 }
-timedMessage("hi");
+
 let gameEnd = (message) => {
 
 }
@@ -197,6 +197,7 @@ const animateLeft = (characterToAnimate, occluder) => {
 }
 //******MAIN GAME ANIMATION (CLICK CHECK INITIATES IN HERE)*****
 const gameAnimation = (characterToAnimate, occluder) => {
+
     success = false; //<-- need to reset this every round
 
     let eyeSize = characterToAnimate.childNodes[2].getAttribute("r")
@@ -257,7 +258,7 @@ const features = {
 }
 let randomFeature = () => {
     return {
-        eyeColor: features.eyeColor[Math.floor(Math.random() * 2)][Math.floor(Math.random() * 6)],
+        eyeColor: features.eyeColor[Math.floor(Math.random() * 2)][Math.floor(Math.random() * 5)],
         eyeSize: features.eyeSize[Math.floor(Math.random() * 2)],
         bodyColor: features.bodyColor[Math.floor(Math.random() * 2)],
         hornWidth: Math.floor(Math.random() * 2) + 1,
