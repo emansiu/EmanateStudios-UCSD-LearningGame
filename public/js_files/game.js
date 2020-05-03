@@ -46,6 +46,16 @@ const circleForEffect = document.createElementNS("http://www.w3.org/2000/svg", "
 // =========================== END CORE GLOBAL COMPONENTS ===========================
 
 //=========================== GAME FUNCTIONS ========================================
+let timedMessage = (text, timeToDelay) => {
+    let pElement = document.createElement('p');
+    let message = document.createTextNode(text);
+    pElement.appendChild(message);
+    document.getElementById("container").appendChild(pElement)
+}
+timedMessage("hi");
+let gameEnd = (message) => {
+
+}
 let addScore = () => {
     success = true;
     return score += 1;
