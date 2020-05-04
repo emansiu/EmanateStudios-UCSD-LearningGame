@@ -33,6 +33,25 @@ app.get('/api/subject', async (req, res) => {
     }
 })
 
+//================ALL THE PU DATA================
+app.put('/api/exit', async (req, res) => {
+
+    const { finish_date_time, condition, hunch1, hunch1_level, hunch2, hunch2_level, hunch3, hunch3_level, has_hunch, last_action, completed_block_100percent_after_trial, aborted, blur_1_seconds, blur_2_seconds, subjectUID } = req.body;
+
+    try {
+        // look for the subject
+        let existingExitInterview = await exitInterview.findOne({ where: { subjectUID } });
+        if (existingExitInterview) {
+            existingExitInterview.update({
+                finish_date_time, condition, hunch1, hunch1_level, hunch2, hunch2_level, hunch3, hunch3_level, has_hunch, last_action, completed_block_100percent_after_trial, aborted, blur_1_seconds, blur_2_seconds
+            })
+        }
+        res.status(200).send('Successfully update exit interview')
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error')
+    }
+});
 //================ALL THE POST DATA================
 // CREATE NEW DATA SUBJECT
 app.post('/api/subject', async (req, res) => {
@@ -69,12 +88,12 @@ app.post('/api/demographic', async (req, res) => {
 // CREATE EXIT INTERVIEW
 app.post('/api/exit', async (req, res) => {
 
-    const { finish_date_time, condition, hunch1, hunch1_level, hunch2, hunch2_level, hunch3, hunch3_level, has_hunch, last_action, completed_block_100percent_after_trial, aborted, blur_1_seconds, blur_2_seconds } = req.body;
+    const { finish_date_time, condition, hunch1, hunch1_level, hunch2, hunch2_level, hunch3, hunch3_level, has_hunch, last_action, completed_block_100percent_after_trial, aborted, blur_1_seconds, blur_2_seconds, subjectUID } = req.body;
 
     try {
         // first create new subject
         await exitInterview.create({
-            finish_date_time, condition, hunch1, hunch1_level, hunch2, hunch2_level, hunch3, hunch3_level, has_hunch, last_action, completed_block_100percent_after_trial, aborted, blur_1_seconds, blur_2_seconds
+            finish_date_time, condition, hunch1, hunch1_level, hunch2, hunch2_level, hunch3, hunch3_level, has_hunch, last_action, completed_block_100percent_after_trial, aborted, blur_1_seconds, blur_2_seconds, subjectUID
         });
 
         res.status(200).send({ msg: "Exit Interview Added Successfully" })

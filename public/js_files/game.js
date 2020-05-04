@@ -83,6 +83,16 @@ let gameEnd = () => {
     // group button and text
     buttonGroup.appendChild(button);
     buttonGroup.appendChild(buttonText);
+    // create exit interview entry in db, then edit in following pages
+    let data = {
+        subjectUID: localStorage.getItem("subject"),
+    }
+    const options = {
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers: { 'Content-Type': 'application/json' }
+    }
+    fetch('/api/exit', options)
     // imidiately assign re-route action
     buttonGroup.addEventListener("mousedown", () => { window.location.href = "/pages/exitInterview_1.html" });
     document.getElementById("playArea").appendChild(buttonGroup);
@@ -103,6 +113,7 @@ let nextLevel = () => {
 let removeElement = (elementToRemove) => {
     elementToRemove.remove()
 }
+// !!**==== CHECK IF GAME IS OVER EVERY ROUND ===**!!
 let checkGameOver = (characterToRemove) => {
     // POST ROUND TO DATABASE
     let data = {
@@ -232,15 +243,7 @@ const animateLeft = (characterToAnimate, occluder) => {
 const gameAnimation = (characterToAnimate, occluder) => {
 
     success = false; //<-- need to reset this every round
-
-
-
-
-    console.log(`horn height parsed = ${parseInt(currentRoundFeatures.horns_h)}`)
-    console.log(`horn height = ${currentRoundFeatures.horns_h}`)
-
-
-
+    // ==== DIRECTION LOGIC ========
     let directionToAnimate = () => {
         switch (gameVersion) {
             //---------- Random Direction -----------
@@ -268,11 +271,6 @@ const gameAnimation = (characterToAnimate, occluder) => {
                 alert("there is no version assigned. Please reach out to administrator");
         }
 
-        if (gameVersion === "version1") {
-
-        } else {
-
-        }
     }
     // make character clickable only once per round
     const once = () => {

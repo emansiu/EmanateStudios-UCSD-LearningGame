@@ -10,10 +10,9 @@ let slideOff = (objectToRemove) => {
 let timeOnPageLoad = moment().format('YYYY-MM-DD h:mm:ss.ms'); //<--recorded as soon as page is loaded
 
 let getGameVersion = () => {
-    if (localStorage.getItem("gameVersion") == null) {
-        return document.getElementById("gameMenu").getAttribute("assignment");
-    }
-    return ""
+
+    return document.getElementById("gameMenu").getAttribute("assignment");
+
 }
 // ACQUIRE ALL FORMS FROM PAGE
 // DOM elements need to be assigned to array first 
@@ -36,7 +35,12 @@ AllForms.forEach(form => {
                     email: form.elements["lastName"].value,
                     wantsConsentEmailed: form.elements["sendEmail"].checked
                 }
-
+                // very rudamentary form check but quick and gets job done
+                const { firstName, lastName, email } = data;
+                if (!firstName || !lastName || !email) {
+                    alert('please fill out all the inputs');
+                    return;
+                }
                 // add version to local storage on client system
                 localStorage.setItem("gameVersion", getGameVersion())
                 const options = {
@@ -59,6 +63,12 @@ AllForms.forEach(form => {
                     age: form.elements["age"].value,
                     gender: form.elements["gender"].value,
                     demographic: form.elements["demographic"].value
+                }
+                // very rudamentary form check but quick and gets job done
+                const { age, gender, demographic } = data;
+                if (!age || gender == "" || demographic == "") {
+                    alert('please fill out all the inputs');
+                    return;
                 }
                 const options = {
                     method: 'POST',
@@ -108,19 +118,165 @@ AllForms.forEach(form => {
 
             });
             break;
+        // --------------FINAL EXIT INTERVIEW PART 1 ------------------
+        case 'exitInterview_1':
+            form.addEventListener('submit', async (event) => {
+                event.preventDefault();
 
+                let data = {
+                    has_hunch: form.elements["q1"].value,
+                    subjectUID: localStorage.getItem("subject")
+                }
+                const options = {
+                    method: 'PUT',
+                    body: JSON.stringify(data),
+                    headers: { 'Content-Type': 'application/json' }
+                }
+                if (form.elements["q1"].value == "") {
+                    alert("please select an option");
+                    return;
+                }
+                if (form.elements["q1"].value === "1") {
+                    try {
+                        await fetch('/api/exit', options)
+                        window.location.href = "/pages/exitInterview_2.html";
+                    } catch (err) {
+                        console.error(err)
+                    }
+                } else {
+                    try {
+                        await fetch('/api/exit', options)
+                        window.location.href = "/pages/final.html";
+                    } catch (err) {
+                        console.error(err);
+                    }
+                }
+            });
+            break;
+        // --------------FINAL EXIT INTERVIEW HUNCH 1------------------
+        case 'exitInterview_2':
+            form.addEventListener('submit', async (event) => {
+                event.preventDefault();
+
+                let data = {
+                    hunch1: document.getElementById("hunch1").value,
+                    hunch1_level: document.getElementById("confidencePercent").value,
+                    subjectUID: localStorage.getItem("subject")
+                }
+                const options = {
+                    method: 'PUT',
+                    body: JSON.stringify(data),
+                    headers: { 'Content-Type': 'application/json' }
+                }
+                if (form.elements["moreHunch"].value == "") {
+                    alert("please select an option");
+                    return;
+                }
+                if (data.hunch1 == "") {
+                    alert("please fill out your hunch");
+                    return;
+                }
+                if (form.elements["moreHunch"].value === "1") {
+                    try {
+                        await fetch('/api/exit', options)
+                        window.location.href = "/pages/exitInterview_3.html";
+                    } catch (err) {
+                        console.error(err)
+                    }
+                } else {
+                    try {
+                        await fetch('/api/exit', options)
+                        window.location.href = "/pages/final.html";
+                    } catch (err) {
+                        console.error(err);
+                    }
+                }
+            });
+            break;
+        // --------------FINAL EXIT INTERVIEW HUNCH 2------------------
+        case 'exitInterview_3':
+            form.addEventListener('submit', async (event) => {
+                event.preventDefault();
+
+                let data = {
+                    hunch2: document.getElementById("hunch").value,
+                    hunch2_level: document.getElementById("confidencePercent").value,
+                    subjectUID: localStorage.getItem("subject")
+                }
+                const options = {
+                    method: 'PUT',
+                    body: JSON.stringify(data),
+                    headers: { 'Content-Type': 'application/json' }
+                }
+                if (form.elements["moreHunch"].value == "") {
+                    alert("please select an option");
+                    return;
+                }
+                if (data.hunch2 == "") {
+                    alert("please fill out your hunch");
+                    return;
+                }
+                if (form.elements["moreHunch"].value === "1") {
+                    try {
+                        await fetch('/api/exit', options)
+                        window.location.href = "/pages/exitInterview_4.html";
+                    } catch (err) {
+                        console.error(err)
+                    }
+                } else {
+                    try {
+                        await fetch('/api/exit', options)
+                        window.location.href = "/pages/final.html";
+                    } catch (err) {
+                        console.error(err);
+                    }
+                }
+            });
+            break;
+        // --------------FINAL EXIT INTERVIEW HUNCH 3------------------
+        case 'exitInterview_4':
+            form.addEventListener('submit', async (event) => {
+                event.preventDefault();
+
+                let data = {
+                    hunch3: document.getElementById("hunch").value,
+                    hunch3_level: document.getElementById("confidencePercent").value,
+                    finish_date_time: moment().format('YYYY-MM-DD h:mm:ss.ms'),
+                    subjectUID: localStorage.getItem("subject")
+                }
+                const options = {
+                    method: 'PUT',
+                    body: JSON.stringify(data),
+                    headers: { 'Content-Type': 'application/json' }
+                }
+                if (data.hunch3 == "") {
+                    alert("please fill out your hunch");
+                    return;
+                }
+
+                try {
+                    await fetch('/api/exit', options)
+                    localStorage.removeItem("gameVersion");
+                    window.location.href = "/pages/final.html";
+                } catch (err) {
+                    console.error(err);
+                }
+
+            });
+            break;
         default:
         //do nothing
     }
 })
 
 
-
-// animate form on
+// animate elements on
 let ps = document.getElementsByTagName("form")
 let pTag = document.getElementsByTagName("p")
 let h2Tag = document.getElementsByTagName("h2")
+let h1Tag = document.getElementsByTagName("h1")
 
 slideOn(ps);
 slideOn(pTag);
 slideOn(h2Tag);
+slideOn(h1Tag);
