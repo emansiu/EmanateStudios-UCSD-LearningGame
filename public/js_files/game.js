@@ -7,7 +7,7 @@ let windowWidth = window.innerWidth;
 if (windowWidth < 1320 || windowHeight < 890) {
     alert("Your window screen is too small. Please maximize.")
 }
-
+const gameVersion = localStorage.getItem("gameVersion");
 let score = 0;
 let trialIteration = 0;
 const numberOfRounds = 30;
@@ -233,24 +233,45 @@ const gameAnimation = (characterToAnimate, occluder) => {
 
     success = false; //<-- need to reset this every round
 
-    let eyeSize = characterToAnimate.childNodes[2].getAttribute("r")
+
+
+
+    console.log(`horn height parsed = ${parseInt(currentRoundFeatures.horns_h)}`)
+    console.log(`horn height = ${currentRoundFeatures.horns_h}`)
+
+
 
     let directionToAnimate = () => {
-        //---------- Random Direction -----------
-        if (localStorage.getItem("gameVersion") === "version1") {
-            if (Math.random() >= 0.5) {
-                return animateRight(characterToAnimate, occluder);
-            } else {
-                return animateLeft(characterToAnimate, occluder);
-            }
-        } else
-        //---------- Dictated by eye size -----------
-        {
-            if (eyeSize == "1.6") {
-                return animateRight(characterToAnimate, occluder);
-            } else {
-                return animateLeft(characterToAnimate, occluder);
-            }
+        switch (gameVersion) {
+            //---------- Random Direction -----------
+            case "version1":
+                if (Math.random() >= 0.5) {
+                    return animateRight(characterToAnimate, occluder);
+                } else {
+                    return animateLeft(characterToAnimate, occluder);
+                }
+            //---------- Dictated by eye size (1.6 goes right) -----------
+            case "version2":
+                if (currentRoundFeatures.eye_size == "1.6") {
+                    return animateRight(characterToAnimate, occluder);
+                } else {
+                    return animateLeft(characterToAnimate, occluder);
+                }
+            //---------- Dictated by horns (size 7 AND 80% chance goes right)-----------
+            case "versionP":
+                if (parseInt(currentRoundFeatures.horns_h) >= 5 && Math.random() >= 0.2) {
+                    return animateRight(characterToAnimate, occluder);
+                } else {
+                    return animateLeft(characterToAnimate, occluder);
+                }
+            default:
+                alert("there is no version assigned. Please reach out to administrator");
+        }
+
+        if (gameVersion === "version1") {
+
+        } else {
+
         }
     }
     // make character clickable only once per round
