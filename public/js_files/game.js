@@ -47,14 +47,45 @@ const circleForEffect = document.createElementNS("http://www.w3.org/2000/svg", "
 
 //=========================== GAME FUNCTIONS ========================================
 let timedMessage = (text, timeToDelay) => {
-    let pElement = document.createElement('p');
-    let message = document.createTextNode(text);
-    pElement.appendChild(message);
-    document.getElementById("timer").appendChild(pElement)
+
+    let timeLeft = 0
+    const timerBySecond = () => {
+        if (timeLeft < timeToDelay) {
+            timeLeft += 1000;
+            document.getElementById("timer").innerHTML = `${text} ${(timeToDelay - timeLeft) / 1000} seconds`;
+        } else {
+            clearInterval(timer);
+            gameAnimation(createCharacter(), createOccluder());
+            document.getElementById("timer").innerHTML = "";
+        }
+    }
+    const timer = setInterval(timerBySecond, 1000)
+
 }
-
-let gameEnd = (message) => {
-
+let gameEnd = () => {
+    document.getElementById("timer").innerHTML = `Thank you for playing! `
+    let buttonGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
+    buttonGroup.setAttribute("id", "character");
+    let buttonText = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    buttonText.setAttribute("x", "46");
+    buttonText.setAttribute("y", "20");
+    buttonText.setAttribute("fill", "white")
+    buttonText.setAttribute("style", "font-size:0.2rem")
+    buttonText.innerHTML = "Go to Final Review";
+    let button = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    button.setAttribute("width", "29");
+    button.setAttribute("height", "6");
+    button.setAttribute("x", "44");
+    button.setAttribute("y", "16");
+    button.setAttribute("rx", "1px");
+    button.setAttribute("ry", "1px");
+    button.setAttribute("fill", "navy");
+    // group button and text
+    buttonGroup.appendChild(button);
+    buttonGroup.appendChild(buttonText);
+    // imidiately assign re-route action
+    buttonGroup.addEventListener("mousedown", () => { window.location.href = "/pages/exitInterview_1.html" });
+    document.getElementById("playArea").appendChild(buttonGroup);
 }
 let addScore = () => {
     success = true;
@@ -95,21 +126,24 @@ let checkGameOver = (characterToRemove) => {
     }
     fetch('/api/trial', options)
 
-    // PERFORM ROUND LOGIC
+    //*****========= PERFORM ROUND LOGIC ============= ******
     if (level === numberOfLevels && currentRound === numberOfRounds) {
         keepPlaying = false;
-        alert('thanks for playing, you are all done!')
+        gameEnd();
     } else if (score === numberOfRounds) {
         keepPlaying = false;
-        alert('a perfect round! You are free to go!')
+        gameEnd();
     } else if (currentRound === numberOfRounds) {
+        if (characterToRemove) {
+            removeElement(characterToRemove)
+        }
         keepPlaying = true;
         currentRound = 1;
         score = 0;
         level += 1;
         document.getElementById("level").innerHTML = `Level : ${level}/${numberOfLevels}`
         document.getElementById("score").innerHTML = `Score : ${score}`
-        gameAnimation(createCharacter(), createOccluder()); //<!!!***RECURSIVELY STARTING ANOTHER ROUND***!!!
+        timedMessage("Level Complete! Next levels starts in : ", 20000) //<!!!***RECURSIVELY STARTING ANOTHER ROUND***!!!
     } else {
         if (characterToRemove) {
             removeElement(characterToRemove)
@@ -119,7 +153,6 @@ let checkGameOver = (characterToRemove) => {
         document.getElementById("score").innerHTML = `Score : ${score}`
         gameAnimation(createCharacter(), createOccluder()); //<!!!***RECURSIVELY STARTING ANOTHER ROUND***!!!
     }
-    console.log(`current round: ${currentRound}, level: ${level}, score: ${score}`)
 }
 let clearDirectionAnimations = () => {
     animRight.clear();
@@ -366,9 +399,8 @@ const createCharacter = (() => {
 // createCharacter() returns a collection "<g>" of svg elements to attach to parent svg on the game page.
 // createOccluder() returns the occluder object to animate on and off screen per round.
 if (windowWidth > 1320 && windowHeight > 890) {
-    gameAnimation(createCharacter(), createOccluder());
+    timedMessage("Game Starts in :", 6000)
 }
-
 
 
 
