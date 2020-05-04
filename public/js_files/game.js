@@ -8,6 +8,14 @@ if (windowWidth < 1320 || windowHeight < 890) {
     alert("Your window screen is too small. Please maximize.")
 }
 const gameVersion = localStorage.getItem("gameVersion");
+let gameCondition = "";
+if (gameVersion === "version1") {
+    gameCondition = 1;
+} else if (gameVersion === "version2") {
+    gameCondition = 2;
+} else {
+    gameCondition = 3;
+}
 let score = 0;
 let trialIteration = 0;
 const numberOfRounds = 30;
@@ -86,6 +94,8 @@ let gameEnd = () => {
     // create exit interview entry in db, then edit in following pages
     let data = {
         subjectUID: localStorage.getItem("subject"),
+        completed_block_100percent_after_trial: level,
+        condition: gameCondition
     }
     const options = {
         method: 'POST',
