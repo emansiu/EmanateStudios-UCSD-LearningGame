@@ -4,7 +4,7 @@ const playArea = document.getElementById("playArea");
 // minimum 1320 890 resolution
 let windowHeight = window.innerHeight;
 let windowWidth = window.innerWidth;
-if (windowWidth < 1000 || windowHeight < 690) {
+if (windowWidth < 900 || windowHeight < 660) {
     alert("Your window screen is too small. Please maximize.")
 }
 console.log(windowWidth)
@@ -429,7 +429,7 @@ const createCharacter = (() => {
 //<!!!***RECURSIVE THROUGH "checkGameOver = (characterToRemove)" FUNCTION***!!!
 // createCharacter() returns a collection "<g>" of svg elements to attach to parent svg on the game page.
 // createOccluder() returns the occluder object to animate on and off screen per round.
-if (windowWidth > 1000 && windowHeight > 690) {
+if (windowWidth > 900 && windowHeight > 660) {
     timedMessage("Game Starts in :", 6000)
 }
 
