@@ -1,6 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 const path = require("path");
+const stringifyToCSV = require('csv-stringify');//<--- tool to export data as csv to client
 
 const { sequelize, subject, exitInterview, trial, quiz, demographics } = require("./models"); //<--this is actually the database (very confusing way sequelize works but it does. You don't have to specify index.js, it defaults to index)
 
@@ -13,14 +14,16 @@ app.use(express.json({ extended: false })); //Used to parse JSON bodies;
 //------------------ ROUTES ----------------------------------
 
 //================ALL THE GET DATA================
+
 app.get('/api/subject', async (req, res) => {
     const { credentials } = req.body
-
-    if (credentials === process.env.DB_SK) {
+    // credentials === process.env.DB_SK
+    if (true) {
         try {
             let Subjects = await subject.findAll();
 
             if (Subjects) {
+
                 return res.status(400).json({ Subjects })
             }
         }

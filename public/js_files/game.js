@@ -1,7 +1,7 @@
 //------- INITIALIZE CORE GLOBAL GAME COMPONENTS-------
 const playArea = document.getElementById("playArea");
 
-// minimum 1320 890 resolution
+// minimum 900 600 resolution
 let windowHeight = window.innerHeight;
 let windowWidth = window.innerWidth;
 if (windowWidth < 900 || windowHeight < 600) {

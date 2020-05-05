@@ -4,6 +4,8 @@
     --formBackGroundColor: rgba(225,225,225,0.8);
     --gradientOne:33, 74, 117;
     --gradientTwo:33, 58, 107;
+    --DataGradientOne:150, 150, 150;
+    --DataGradientTwo:255, 255, 255;
     --buttonColorOne:38, 99, 31;
     --buttonColorTwo:42, 130, 33;
 }
@@ -229,3 +231,27 @@ button:hover {
       height:150px;
       margin-bottom: 2rem;
   }
+
+  /* STATS SECTION */
+  .dataContainer{
+    -webkit-background-size: auto;
+    -moz-background-size: auto;
+    -o-background-size: auto;
+    background-size: auto;
+    background: '#70bg32';
+    background-repeat:no-repeat;
+    background: -webkit-linear-gradient( to left top, rgb(var(--DataGradientOne)), rgb(var(--DataGradientTwo))); 
+    background: -moz-linear-gradient( to left top, rgb(var(--DataGradientOne)), rgb(var(--DataGradientTwo)));  
+    background: -ms-linear-gradient( to left top, rgb(var(--DataGradientOne)), rgb(var(--DataGradientTwo))); 
+    background: -o-linear-gradient( to left top, rgb(var(--DataGradientOne)), rgb(var(--DataGradientTwo))); 
+    background: linear-gradient( to left top, rgb(var(--DataGradientOne)), rgb(var(--DataGradientTwo))) fixed; 
+}
+.singleGridCenter{
+    border:3px solid red;
+    display:grid;
+    grid-auto-rows:minmax(90vh, auto);
+}
+.quadGrid{
+    display:grid;
+    grid-template-columns:repeat(2, 1fr);
+}
