@@ -34,6 +34,26 @@ app.get('/api/subject', async (req, res) => {
     } else {
         res.status(500).send('Not authorized for this route')
     }
+});
+app.get('/api/trial', async (req, res) => {
+    const { credentials } = req.body
+    // credentials === process.env.DB_SK
+    if (true) {
+        try {
+            let Subjects = await trial.findAll();
+
+            if (Subjects) {
+
+                return res.status(400).json({ Subjects })
+            }
+        }
+        catch (err) {
+            console.error(err.message);
+            res.status(500).send('Server Error')
+        }
+    } else {
+        res.status(500).send('Not authorized for this route')
+    }
 })
 
 //================ALL THE PU DATA================
