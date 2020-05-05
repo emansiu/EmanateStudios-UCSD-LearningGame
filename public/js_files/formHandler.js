@@ -32,7 +32,7 @@ AllForms.forEach(form => {
                     endTime_consent: moment().format('YYYY-MM-DD h:mm:ss.ms'),
                     firstName: form.elements["firstName"].value,
                     lastName: form.elements["lastName"].value,
-                    email: form.elements["lastName"].value,
+                    email: form.elements["emailConsent"].value,
                     wantsConsentEmailed: form.elements["sendEmail"].checked
                 }
                 // very rudamentary form check but quick and gets job done
