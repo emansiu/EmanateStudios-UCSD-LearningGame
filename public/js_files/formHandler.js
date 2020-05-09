@@ -5,7 +5,9 @@ let slideOn = (objectToAdd) => {
 let slideOff = (objectToRemove) => {
     gsap.to(objectToRemove, { duration: 1, y: 10, ease: "power2.in", opacity: 0 })
 }
-
+console.log(window.innerHeight)
+console.log(window.innerWidth)
+console.log(navigator.userAgent)
 //================== INITIAL VARIABLES / FUNCTIONS ======================
 let timeOnPageLoad = moment().format('YYYY-MM-DD h:mm:ss.ms'); //<--recorded as soon as page is loaded
 

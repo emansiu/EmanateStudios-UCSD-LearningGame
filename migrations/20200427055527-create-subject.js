@@ -26,6 +26,15 @@ module.exports = {
       wantsConsentEmailed: {
         type: Sequelize.BOOLEAN
       },
+      screenWidth: {
+        type: Sequelize.INTEGER
+      },
+      screenHeight: {
+        type: Sequelize.INTEGER
+      },
+      userAgent: {
+        type: Sequelize.STRING
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

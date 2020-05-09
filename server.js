@@ -81,12 +81,12 @@ app.put('/api/exit', async (req, res) => {
 // CREATE NEW DATA SUBJECT
 app.post('/api/subject', async (req, res) => {
 
-    const { startTime_consent, endTime_consent, firstName, lastName, email, wantsConsentEmailed } = req.body;
+    const { startTime_consent, endTime_consent, firstName, lastName, email, wantsConsentEmailed, screenWidth, screenHeight, userAgent } = req.body;
 
     try {
         // first create new subject
         const newSubject = await subject.create({
-            startTime_consent, endTime_consent, firstName, lastName, email, wantsConsentEmailed
+            startTime_consent, endTime_consent, firstName, lastName, email, wantsConsentEmailed, screenWidth, screenHeight, userAgent
         });
         res.status(200).json({ subject: newSubject.id })
     } catch (err) {
