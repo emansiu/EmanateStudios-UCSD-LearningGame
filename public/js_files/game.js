@@ -1,14 +1,11 @@
 //------- INITIALIZE CORE GLOBAL GAME COMPONENTS-------
 const playArea = document.getElementById("playArea");
-
 // minimum 900 600 resolution
 let windowHeight = window.innerHeight;
 let windowWidth = window.innerWidth;
 if (windowWidth < 900 || windowHeight < 600) {
     alert("Your window screen is too small. Please maximize.")
 }
-console.log(windowWidth)
-console.log(windowHeight)
 const gameVersion = localStorage.getItem("gameVersion");
 let gameCondition = "";
 if (gameVersion === "version1") {
@@ -95,7 +92,7 @@ let gameEnd = () => {
     buttonGroup.appendChild(buttonText);
     // create exit interview entry in db, then edit in following pages
     let data = {
-        subjectUID: localStorage.getItem("subject"),
+        subjectId: parseInt(localStorage.getItem("subject")),
         completed_block_100percent_after_trial: level,
         condition: gameCondition
     }
@@ -126,7 +123,7 @@ let removeElement = (elementToRemove) => {
     elementToRemove.remove()
 }
 // !!**==== CHECK IF GAME IS OVER EVERY ROUND ===**!!
-let checkGameOver = (characterToRemove) => {
+let checkGameOver = (charactersToRemove) => {
     // POST ROUND TO DATABASE
     let data = {
         trialIteration: addTrialIteration(),
@@ -139,7 +136,7 @@ let checkGameOver = (characterToRemove) => {
         mouth_h: currentRoundFeatures.mouth_h,
         horns_w: currentRoundFeatures.horns_w,
         horns_h: currentRoundFeatures.horns_h,
-        subjectUID: localStorage.getItem("subject"),
+        subjectId: parseInt(localStorage.getItem("subject")),
         cursorX_enterOccluder, cursorY_enterOccluder, cursorX_exitOccluder, cursorY_exitOccluder, score,
     }
     const options = {
@@ -157,8 +154,9 @@ let checkGameOver = (characterToRemove) => {
         keepPlaying = false;
         gameEnd();
     } else if (currentRound === numberOfRounds) {
-        if (characterToRemove) {
-            removeElement(characterToRemove)
+        if (charactersToRemove) {
+            removeElement(charactersToRemove[0])
+            removeElement(charactersToRemove[1])
         }
         keepPlaying = true;
         currentRound = 1;
@@ -168,8 +166,9 @@ let checkGameOver = (characterToRemove) => {
         document.getElementById("score").innerHTML = `Score : ${score}`
         timedMessage("Level Complete! Next levels starts in : ", 20000) //<!!!***RECURSIVELY STARTING ANOTHER ROUND***!!!
     } else {
-        if (characterToRemove) {
-            removeElement(characterToRemove)
+        if (charactersToRemove) {
+            removeElement(charactersToRemove[0])
+            removeElement(charactersToRemove[1])
         }
         addRound();
         document.getElementById("level").innerHTML = `Level : ${level}/${numberOfLevels}`
@@ -233,7 +232,7 @@ let effectAnimation = () => {
 const characterFadeOut = (characterToFade, occluder) => {
     gsap.timeline({ onComplete: removeElement, onCompleteParams: [characterToFade] })
         .to(characterToFade, { duration: 0.5, scale: 1.2, opacity: 0, transformOrigin: "center center", onComplete: clearDirectionAnimations })
-        .to(occluder, { duration: 1, y: 2, opacity: 0, scale: 1.1, transformOrigin: "center center", onComplete: checkGameOver, onCompleteParams: [characterToFade] }, "+=0.5")
+        .to(occluder, { duration: 1, y: 2, opacity: 0, scale: 1.1, transformOrigin: "center center", onComplete: checkGameOver, onCompleteParams: [[characterToFade, occluder]] }, "+=0.5")
 }
 //******ANIMATE RIGHT
 const animateRight = (characterToAnimate, occluder) => {
@@ -241,7 +240,7 @@ const animateRight = (characterToAnimate, occluder) => {
     animRight.to(characterToAnimate, { duration: 0.5, x: 21, y: -30 })
     animRight.to(characterToAnimate, { duration: 0.5, opacity: 1, onComplete: mouseAfterHidden })
     animRight.to(characterToAnimate, { duration: 0.5, x: 46.5, y: -30, ease: "none", svgOrigin: "300 200" })
-    animRight.to(occluder, { duration: 1, y: 2, opacity: 0, scale: 1.1, transformOrigin: "center center", onComplete: checkGameOver, onCompleteParams: [characterToAnimate] }, "+=0.5")
+    animRight.to(occluder, { duration: 1, y: 2, opacity: 0, scale: 1.1, transformOrigin: "center center", onComplete: checkGameOver, onCompleteParams: [[characterToAnimate, occluder]] }, "+=0.5")
 }
 //******ANIMATE LEFT
 const animateLeft = (characterToAnimate, occluder) => {
@@ -249,7 +248,7 @@ const animateLeft = (characterToAnimate, occluder) => {
     animLeft.to(characterToAnimate, { duration: 0.5, x: -21, y: -30 })
     animLeft.to(characterToAnimate, { duration: 0.5, opacity: 1, onComplete: mouseAfterHidden })
     animLeft.to(characterToAnimate, { duration: 0.5, x: -46.5, y: -30, ease: "none" })
-    animLeft.to(occluder, { duration: 1, y: 2, opacity: 0, scale: 1.1, transformOrigin: "center center", onComplete: checkGameOver, onCompleteParams: [characterToAnimate] }, "+=0.5")
+    animLeft.to(occluder, { duration: 1, y: 2, opacity: 0, scale: 1.1, transformOrigin: "center center", onComplete: checkGameOver, onCompleteParams: [[characterToAnimate, occluder]] }, "+=0.5")
 }
 //******MAIN GAME ANIMATION (CLICK CHECK INITIATES IN HERE)*****
 const gameAnimation = (characterToAnimate, occluder) => {
@@ -274,7 +273,7 @@ const gameAnimation = (characterToAnimate, occluder) => {
                 }
             //---------- Dictated by horns (size 7 AND 80% chance goes right)-----------
             case "versionP":
-                if (parseInt(currentRoundFeatures.horns_h) >= 5 && Math.random() >= 0.2) {
+                if (parseInt(currentRoundFeatures.eye_size) == "1.6" && Math.random() >= 0.2) {
                     return animateRight(characterToAnimate, occluder);
                 } else {
                     return animateLeft(characterToAnimate, occluder);

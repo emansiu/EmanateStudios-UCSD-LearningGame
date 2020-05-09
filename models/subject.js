@@ -1,13 +1,6 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   const subject = sequelize.define('subject', {
-    UID: {
-      primaryKey: true,
-      unique: true,
-      allowNull: false,
-      type: DataTypes.UUID,
-      defaultValue: require("sequelize").UUIDV4
-    },
     startTime_consent: DataTypes.DATE,
     endTime_consent: DataTypes.DATE,
     firstName: DataTypes.STRING,

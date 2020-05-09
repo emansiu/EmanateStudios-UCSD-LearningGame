@@ -9,9 +9,23 @@ let slideOff = (objectToRemove) => {
 //================== INITIAL VARIABLES / FUNCTIONS ======================
 let timeOnPageLoad = moment().format('YYYY-MM-DD h:mm:ss.ms'); //<--recorded as soon as page is loaded
 
-let getGameVersion = () => {
+let getGameVersion = (id) => {
 
-    return document.getElementById("gameMenu").getAttribute("assignment");
+    const v1Offset = 2;
+    const v2Offset = 1;
+    const rotateCycle = 3;
+    let gameVersion = "";
+
+    // assign version of game per 3rd intervals (managed by rotateCycle)
+    if ((id + v2Offset) % rotateCycle == 0) {
+        gameVersion = "version2";
+    } else if ((id + v1Offset) % rotateCycle == 0) {
+        gameVersion = "version1";
+    } else {
+        gameVersion = "versionP";
+    }
+
+    return gameVersion
 
 }
 // ACQUIRE ALL FORMS FROM PAGE
@@ -41,16 +55,18 @@ AllForms.forEach(form => {
                     alert('please fill out all the inputs');
                     return;
                 }
-                // add version to local storage on client system
-                localStorage.setItem("gameVersion", getGameVersion())
+                // add version to local storage on client system based off subject ID
+
                 const options = {
                     method: 'POST',
                     body: JSON.stringify(data),
                     headers: { 'Content-Type': 'application/json' }
                 }
                 const newUser = await fetch('/api/subject', options)
-                const returnedData = await newUser.json();
-                localStorage.setItem("subject", returnedData.subject)//<--temporarily provide persisted data to local storage. Removed on errors or at end of game.
+                const jsonData = await newUser.json();
+                const subjectID = jsonData.subject
+                localStorage.setItem("subject", subjectID)//<--temporarily provide persisted data to local storage. Removed on errors or at end of game.
+                localStorage.setItem("gameVersion", getGameVersion(subjectID))
                 window.location.href = "/pages/demographics.html";
             });
             break;
@@ -87,7 +103,7 @@ AllForms.forEach(form => {
                 let data = {
                     startTime_quiz: timeOnPageLoad,
                     endTime_quiz: moment().format('YYYY-MM-DD h:mm:ss.ms'),
-                    subjectUID: localStorage.getItem("subject")
+                    subjectId: localStorage.getItem("subject")
                 }
                 const options = {
                     method: 'POST',
@@ -125,7 +141,8 @@ AllForms.forEach(form => {
 
                 let data = {
                     has_hunch: form.elements["q1"].value,
-                    subjectUID: localStorage.getItem("subject")
+                    subjectId: localStorage.getItem("subject"),
+                    finish_date_time: moment().format('YYYY-MM-DD h:mm:ss.ms')
                 }
                 const options = {
                     method: 'PUT',
@@ -138,7 +155,7 @@ AllForms.forEach(form => {
                 }
                 if (form.elements["q1"].value === "1") {
                     try {
-                        await fetch('/api/exit', options)
+                        await fetch('/api/exit', options);
                         window.location.href = "/pages/exitInterview_2.html";
                     } catch (err) {
                         console.error(err)
@@ -161,7 +178,8 @@ AllForms.forEach(form => {
                 let data = {
                     hunch1: document.getElementById("hunch1").value,
                     hunch1_level: document.getElementById("confidencePercent").value,
-                    subjectUID: localStorage.getItem("subject")
+                    subjectId: localStorage.getItem("subject"),
+                    finish_date_time: moment().format('YYYY-MM-DD h:mm:ss.ms')
                 }
                 const options = {
                     method: 'PUT',
@@ -201,7 +219,8 @@ AllForms.forEach(form => {
                 let data = {
                     hunch2: document.getElementById("hunch").value,
                     hunch2_level: document.getElementById("confidencePercent").value,
-                    subjectUID: localStorage.getItem("subject")
+                    subjectId: localStorage.getItem("subject"),
+                    finish_date_time: moment().format('YYYY-MM-DD h:mm:ss.ms')
                 }
                 const options = {
                     method: 'PUT',
@@ -242,7 +261,7 @@ AllForms.forEach(form => {
                     hunch3: document.getElementById("hunch").value,
                     hunch3_level: document.getElementById("confidencePercent").value,
                     finish_date_time: moment().format('YYYY-MM-DD h:mm:ss.ms'),
-                    subjectUID: localStorage.getItem("subject")
+                    subjectId: localStorage.getItem("subject")
                 }
                 const options = {
                     method: 'PUT',
