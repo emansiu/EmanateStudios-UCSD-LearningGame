@@ -5,9 +5,12 @@ let slideOn = (objectToAdd) => {
 let slideOff = (objectToRemove) => {
     gsap.to(objectToRemove, { duration: 1, y: 10, ease: "power2.in", opacity: 0 })
 }
-console.log(window.innerHeight)
-console.log(window.innerWidth)
-console.log(navigator.userAgent)
+// REDIRECT IF SPECS NOT MET---
+let screenWidth = window.innerWidth;
+let screenHeight = window.innerHeight;
+if (screenWidth < 900 || screenHeight < 600 || navigator.maxTouchPoints != 0) {
+    window.location.href = "/pages/lackRequirements.html";
+}
 //================== INITIAL VARIABLES / FUNCTIONS ======================
 let timeOnPageLoad = moment().format('YYYY-MM-DD h:mm:ss.ms'); //<--recorded as soon as page is loaded
 
@@ -49,7 +52,10 @@ AllForms.forEach(form => {
                     firstName: form.elements["firstName"].value,
                     lastName: form.elements["lastName"].value,
                     email: form.elements["emailConsent"].value,
-                    wantsConsentEmailed: form.elements["sendEmail"].checked
+                    wantsConsentEmailed: form.elements["sendEmail"].checked,
+                    screenWidth,
+                    screenHeight,
+                    userAgent: navigator.userAgent
                 }
                 // very rudamentary form check but quick and gets job done
                 const { firstName, lastName, email } = data;
@@ -117,7 +123,9 @@ AllForms.forEach(form => {
                     form.elements["q3"].value === "1" &&
                     form.elements["q4"].value === "2" &&
                     form.elements["q5"].value === "2" &&
-                    form.elements["q6"].value === "3") {
+                    form.elements["q6"].value === "3" &&
+                    form.elements["q7"].value === "1"
+                ) {
                     try {
                         await fetch('/api/quiz', options)
                         window.location.href = "/pages/game.html";

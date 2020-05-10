@@ -59,6 +59,14 @@ p{
     line-height: 2.0rem;
     margin-top:0.5rem;
 }
+ul{
+    font-size: 1.2rem;
+    line-height: 2.0rem;
+    margin-top:0.5rem;
+}
+.dotted {
+list-style-type: circle;
+}
 h1{
     text-align: center;
     font-size: 2.0rem;

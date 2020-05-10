@@ -6,6 +6,29 @@ let windowWidth = window.innerWidth;
 if (windowWidth < 900 || windowHeight < 600) {
     alert("Your window screen is too small. Please maximize.")
 }
+// check if page focus is lost
+const disqualifyBackToStart = async () => {
+    if (document.hidden) {
+        let data = {
+            subjectId: parseInt(localStorage.getItem("subject")),
+            completed_block_100percent_after_trial: score == numberOfRounds ? level : 0,
+            condition: gameCondition,
+            aborted: true
+        }
+        const options = {
+            method: 'POST',
+            body: JSON.stringify(data),
+            headers: { 'Content-Type': 'application/json' }
+        }
+        await fetch('/api/exit', options)
+        localStorage.removeItem("subject");
+        localStorage.removeItem("gameVersion");
+
+        window.location.href = "/pages/disqualified.html";
+    }
+}
+document.addEventListener("visibilitychange", disqualifyBackToStart, false);
+
 const gameVersion = localStorage.getItem("gameVersion");
 let gameCondition = "";
 if (gameVersion === "version1") {
@@ -17,7 +40,7 @@ if (gameVersion === "version1") {
 }
 let score = 0;
 let trialIteration = 0;
-const numberOfRounds = 30;
+const numberOfRounds = 30;//set back to 30
 const numberOfLevels = 6;
 let currentRound = 1;
 let level = 1;
@@ -93,8 +116,9 @@ let gameEnd = () => {
     // create exit interview entry in db, then edit in following pages
     let data = {
         subjectId: parseInt(localStorage.getItem("subject")),
-        completed_block_100percent_after_trial: level,
-        condition: gameCondition
+        completed_block_100percent_after_trial: score == numberOfRounds ? level : 0,
+        condition: gameCondition,
+        aborted: false
     }
     const options = {
         method: 'POST',
@@ -128,7 +152,7 @@ let checkGameOver = (charactersToRemove) => {
     let data = {
         trialIteration: addTrialIteration(),
         success: success ? 1 : 0,
-        condition: localStorage.getItem("gameVersion") === "version1" ? 1 : 2,
+        condition: gameCondition,
         bg_color: currentRoundFeatures.bg_color,
         eye_size: currentRoundFeatures.eye_size,
         eye_color: currentRoundFeatures.eye_color,
@@ -256,24 +280,24 @@ const gameAnimation = (characterToAnimate, occluder) => {
     success = false; //<-- need to reset this every round
     // ==== DIRECTION LOGIC ========
     let directionToAnimate = () => {
-        switch (gameVersion) {
+        switch (gameCondition) {
             //---------- Random Direction -----------
-            case "version1":
+            case 1:
                 if (Math.random() >= 0.5) {
                     return animateRight(characterToAnimate, occluder);
                 } else {
                     return animateLeft(characterToAnimate, occluder);
                 }
             //---------- Dictated by eye size (1.6 goes right) -----------
-            case "version2":
+            case 2:
                 if (currentRoundFeatures.eye_size == "1.6") {
                     return animateRight(characterToAnimate, occluder);
                 } else {
                     return animateLeft(characterToAnimate, occluder);
                 }
             //---------- Dictated by horns (size 7 AND 80% chance goes right)-----------
-            case "versionP":
-                if (parseInt(currentRoundFeatures.eye_size) == "1.6" && Math.random() >= 0.2) {
+            case 3:
+                if (currentRoundFeatures.eye_size == "1.6" && Math.random() >= 0.2) {
                     return animateRight(characterToAnimate, occluder);
                 } else {
                     return animateLeft(characterToAnimate, occluder);
@@ -300,7 +324,7 @@ const gameAnimation = (characterToAnimate, occluder) => {
     // character animates on, goes behind occluder, then passes off to direction animation
     gsap.timeline({ onComplete: directionToAnimate, onCompleteParams: [characterToAnimate, occluder] })
         .from(occluder, { duration: 1, y: 2, opacity: 0 }, "+=0.5")
-        .from(characterToAnimate, { duration: 1.5, y: 30, ease: "elastic.out(1,1)" }, "+=1")
+        .from(characterToAnimate, { duration: 1.5, y: 30, ease: "elastic.out(1,1)" }, "+=0.5")
         .to(characterToAnimate, { duration: 1, y: -16.4, ease: "power2.in", onComplete: provideListener }, "+=2")
         .to(characterToAnimate, { duration: 0.5, opacity: 0 })
 
