@@ -40,7 +40,7 @@ if (gameVersion === "version1") {
 }
 let score = 0;
 let trialIteration = 0;
-const numberOfRounds = 30;//set back to 30
+const numberOfRounds = 30;
 const numberOfLevels = 6;
 let currentRound = 1;
 let level = 1;
