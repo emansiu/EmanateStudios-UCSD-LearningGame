@@ -9,20 +9,17 @@ if (windowWidth < 900 || windowHeight < 600) {
 // check if page focus is lost
 const disqualifyBackToStart = async () => {
     if (document.hidden) {
+
         let data = {
             subjectId: parseInt(localStorage.getItem("subject")),
-            completed_block_100percent_after_trial: score == numberOfRounds ? level : 0,
             condition: gameCondition,
-            aborted: true
         }
         const options = {
-            method: 'POST',
+            method: 'DELETE',
             body: JSON.stringify(data),
             headers: { 'Content-Type': 'application/json' }
         }
-        await fetch('/api/exit', options)
-        localStorage.removeItem("subject");
-        localStorage.removeItem("gameVersion");
+        await fetch('/api/trial', options)
 
         window.location.href = "/pages/disqualified.html";
     }

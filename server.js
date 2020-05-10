@@ -141,6 +141,20 @@ app.post('/auth', async (req, res) => {
     }
 });
 
+//=============== DELETING DATA=====================
+app.delete('/api/trial', async (req, res) => {
+    const { subjectId } = req.body;
+    try {
+        // delete all entries from user
+        await trial.destroy({ where: { subjectId } });
+
+        return res.status(200).send({ msg: "Trials Successfully Removed" })
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error')
+    }
+});
+
 //============ DOWNLOAD ROUTES =============
 app.post('/data/subject', async (req, res) => {
     const credentials = req.body.credentials;
