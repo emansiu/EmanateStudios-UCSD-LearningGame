@@ -8,20 +8,21 @@ if (windowWidth < 900 || windowHeight < 600) {
 }
 // check if page focus is lost
 const disqualifyBackToStart = async () => {
-    if (document.hidden) {
-
-        let data = {
-            subjectId: parseInt(localStorage.getItem("subject")),
-            condition: gameCondition,
+    //if they get a perfect round or play to the end then don't delete
+    if (currentRound !== numberOfRounds && level !== numberOfLevels) {
+        if (document.hidden) {
+            let data = {
+                subjectId: parseInt(localStorage.getItem("subject")),
+                condition: gameCondition,
+            }
+            const options = {
+                method: 'DELETE',
+                body: JSON.stringify(data),
+                headers: { 'Content-Type': 'application/json' }
+            }
+            await fetch('/api/trial', options)
+            window.location.href = "/pages/disqualified.html";
         }
-        const options = {
-            method: 'DELETE',
-            body: JSON.stringify(data),
-            headers: { 'Content-Type': 'application/json' }
-        }
-        await fetch('/api/trial', options)
-
-        window.location.href = "/pages/disqualified.html";
     }
 }
 document.addEventListener("visibilitychange", disqualifyBackToStart, false);
