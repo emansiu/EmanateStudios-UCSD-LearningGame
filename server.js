@@ -5,6 +5,7 @@ const stringifyToCSV = require('csv-stringify');//<--- tool to export data as cs
 
 const { sequelize, subject, exitInterview, trial, quiz, demographics } = require("./models"); //<--this is actually the database (very confusing way sequelize works but it does. You don't have to specify index.js, it defaults to index)
 
+
 const app = express();
 // ------------MIDDLEWARE--------------
 // ------------------------------------------------------
@@ -14,47 +15,6 @@ app.use(express.json({ extended: false })); //Used to parse JSON bodies;
 //------------------ ROUTES ----------------------------------
 
 //================ALL THE GET DATA================
-
-app.get('/api/subject/:api', async (req, res) => {
-    const credentials = req.params.api;
-
-    if (credentials === process.env.DB_SK) {
-        try {
-            let Subjects = await subject.findAll();
-
-            if (Subjects) {
-
-                return res.status(400).json({ Subjects })
-            }
-        }
-        catch (err) {
-            console.error(err.message);
-            res.status(500).send('Server Error')
-        }
-    } else {
-        res.status(500).send('Not authorized for this route')
-    }
-});
-app.get('/api/trial/:api', async (req, res) => {
-    const credentials = req.params.api;
-
-    if (credentials === process.env.DB_SK) {
-        try {
-            let Subjects = await trial.findAll();
-
-            if (Subjects) {
-
-                return res.status(400).json({ Subjects })
-            }
-        }
-        catch (err) {
-            console.error(err.message);
-            res.status(500).send('Server Error')
-        }
-    } else {
-        res.status(500).send('Not authorized for this route')
-    }
-})
 
 //================ALL THE PUT DATA================
 app.put('/api/exit', async (req, res) => {
@@ -163,7 +123,120 @@ app.post('/api/trial', async (req, res) => {
         res.status(500).send('Server Error')
     }
 });
+// LOGIN TO DATA
+app.post('/auth', async (req, res) => {
+    const credentials = req.body.credentials;
+    if (credentials == process.env.DB_SK) {
+        try {
+            res.status(200).json(credentials);
+        } catch (err) {
+            console.error(err)
+        }
+    } else {
+        try {
+            return res.status(403).send({ msg: "incorrect password" });
+        } catch (err) {
+            console.error(err);
+        }
+    }
+});
 
+//============ DOWNLOAD ROUTES =============
+app.post('/data/subject', async (req, res) => {
+    const credentials = req.body.credentials;
+    console.log(credentials);
+    if (credentials === process.env.DB_SK) {
+        try {
+            let ServerData = await subject.findAll();
+
+            if (ServerData) {
+                return res.status(200).json({ ServerData })
+            }
+
+        }
+        catch (err) {
+            console.error(err.message);
+            res.status(500).send('Server Error')
+        }
+    } else {
+        res.status(500).send('Not authorized for this route')
+    }
+});
+app.post('/data/trial', async (req, res) => {
+    const credentials = req.body.credentials;
+
+    if (credentials === process.env.DB_SK) {
+        try {
+            let ServerData = await trial.findAll();
+            if (ServerData) {
+                return res.status(200).json({ ServerData })
+            }
+        }
+        catch (err) {
+            console.error(err.message);
+            res.status(500).send('Server Error')
+        }
+    } else {
+        res.status(500).send('Not authorized for this route')
+    }
+})
+app.post('/data/demographics', async (req, res) => {
+    const credentials = req.body.credentials;
+
+    if (credentials === process.env.DB_SK) {
+        try {
+            let ServerData = await demographics.findAll();
+
+            if (ServerData) {
+                return res.status(200).json({ ServerData })
+            }
+        }
+        catch (err) {
+            console.error(err.message);
+            res.status(500).send('Server Error')
+        }
+    } else {
+        res.status(500).send('Not authorized for this route')
+    }
+})
+app.post('/data/exit', async (req, res) => {
+    const credentials = req.body.credentials;
+
+    if (credentials === process.env.DB_SK) {
+        try {
+            let ServerData = await exitInterview.findAll();
+
+            if (ServerData) {
+                return res.status(200).json({ ServerData })
+            }
+        }
+        catch (err) {
+            console.error(err.message);
+            res.status(500).send('Server Error')
+        }
+    } else {
+        res.status(500).send('Not authorized for this route')
+    }
+})
+app.post('/data/quiz', async (req, res) => {
+    const credentials = req.body.credentials;
+
+    if (credentials === process.env.DB_SK) {
+        try {
+            let ServerData = await quiz.findAll();
+
+            if (ServerData) {
+                return res.status(200).json({ ServerData })
+            }
+        }
+        catch (err) {
+            console.error(err.message);
+            res.status(500).send('Server Error')
+        }
+    } else {
+        res.status(500).send('Not authorized for this route')
+    }
+})
 
 
 // ---SERVE STATIC ASSETS FOR PRODUCTION AND DEV-----
