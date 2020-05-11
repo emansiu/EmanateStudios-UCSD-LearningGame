@@ -26,9 +26,10 @@
     <div class="singleGridCenter">
         <div class="duoGrid">
             <div>
+                <!-- LEFT COLUMN -->
                 <h1>Downloads</h1>
                 <div></div>
-                <div class="duoGrid">
+                <div class="duoGrid ShadowNoFill">
                     <button id='subjects'>Subject Data</button>
                     <button id='trials'>Trial Data</button>
                     <button id='demographics'>Demographic Data</button>
@@ -36,8 +37,18 @@
                     <button id='quiz'>Quiz Data</button>
                 </div>
             </div>
+            <!-- RIGHT GRID -->
             <div>
-                <p>stats</p>
+                <h1>stats</h1>
+
+                <ul class="duoGrid ShadowNoFill">
+                    <h2 class="selfLeft" style="text-decoration: underline">Totals</h2><br>
+                    <li class="selfLeft" id="statSubject">Subjects :</li>
+                    <li class="selfLeft" id="statTrial">Trials :</li>
+                    <li class="selfLeft" id="statDemographic">Demographic :</li>
+                    <li class="selfLeft" id="statExit">Exit Interviews :</li>
+                    <li class="selfLeft" id="statQuiz">Quizes :</li>
+                </ul>
             </div>
         </div>
     </div>

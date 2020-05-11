@@ -3,7 +3,6 @@
 try {
 
     document.getElementById('enter').addEventListener("click", async () => {
-        console.log("clicked me");
         let enteredPW = document.getElementById('pw').value
         console.log(enteredPW);
 
@@ -91,3 +90,29 @@ const TrialDownload = new DataToHandle('trials', '/data/trial', "Trials");
 const DemographicsDownload = new DataToHandle('demographics', '/data/demographics', "Demographics");
 const ExitInterviewDownload = new DataToHandle('exitInterview', '/data/exit', "ExitInterviews");
 const QuizDownload = new DataToHandle('quiz', '/data/quiz', "Quizes");
+
+//-------- FILL IN CURRENT STATS------
+const populateStats = async () => {
+    try {
+        const options = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ credentials: localStorage.getItem("token") })
+        }
+        const SubjectResponse = await (await fetch('/data/subject', options)).json();
+        const TrialResponse = await (await fetch('/data/trial', options)).json();
+        const DemographicResponse = await (await fetch('/data/demographics', options)).json();
+        const ExitResponse = await (await fetch('/data/exit', options)).json();
+        const QuizResponse = await (await fetch('/data/quiz', options)).json();
+        document.getElementById('statSubject').innerHTML = `Subjects : ${SubjectResponse.ServerData.length}`;
+        document.getElementById('statTrial').innerHTML = `Trials : ${TrialResponse.ServerData.length}`;
+        document.getElementById('statDemographic').innerHTML = `Demographics : ${DemographicResponse.ServerData.length}`;
+        document.getElementById('statExit').innerHTML = `Exit Interviews : ${ExitResponse.ServerData.length}`;
+        document.getElementById('statQuiz').innerHTML = `Quizes : ${QuizResponse.ServerData.length}`;
+    } catch (err) {
+        console.error(err);
+    }
+}
+populateStats();
