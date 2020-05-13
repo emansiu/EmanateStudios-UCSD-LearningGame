@@ -50,6 +50,12 @@ module.exports = {
       blur_2_seconds: {
         type: Sequelize.BOOLEAN
       },
+      onTask: {
+        type: Sequelize.BOOLEAN
+      },
+      playMethod: {
+        type: Sequelize.STRING
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

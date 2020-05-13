@@ -14,7 +14,9 @@ module.exports = (sequelize, DataTypes) => {
     completed_block_100percent_after_trial: DataTypes.INTEGER,
     aborted: DataTypes.BOOLEAN,
     blur_1_seconds: DataTypes.BOOLEAN,
-    blur_2_seconds: DataTypes.BOOLEAN
+    blur_2_seconds: DataTypes.BOOLEAN,
+    onTask: DataTypes.BOOLEAN,
+    playMethod: DataTypes.STRING
   }, {});
   exitInterview.associate = function (models) {
     exitInterview.belongsTo(models.subject)

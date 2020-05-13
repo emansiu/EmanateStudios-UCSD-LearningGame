@@ -19,14 +19,14 @@ app.use(express.json({ extended: false })); //Used to parse JSON bodies;
 //================ALL THE PUT DATA================
 app.put('/api/exit', async (req, res) => {
 
-    const { finish_date_time, condition, hunch1, hunch1_level, hunch2, hunch2_level, hunch3, hunch3_level, has_hunch, last_action, completed_block_100percent_after_trial, aborted, blur_1_seconds, blur_2_seconds, subjectId } = req.body;
+    const { finish_date_time, condition, hunch1, hunch1_level, hunch2, hunch2_level, hunch3, hunch3_level, has_hunch, last_action, completed_block_100percent_after_trial, aborted, blur_1_seconds, blur_2_seconds, onTask, playMethod, subjectId } = req.body;
 
     try {
         // look for the subject
         let existingExitInterview = await exitInterview.findOne({ where: { subjectId } });
         if (existingExitInterview) {
             existingExitInterview.update({
-                finish_date_time, condition, hunch1, hunch1_level, hunch2, hunch2_level, hunch3, hunch3_level, has_hunch, last_action, completed_block_100percent_after_trial, aborted, blur_1_seconds, blur_2_seconds
+                finish_date_time, condition, hunch1, hunch1_level, hunch2, hunch2_level, hunch3, hunch3_level, has_hunch, last_action, completed_block_100percent_after_trial, aborted, blur_1_seconds, blur_2_seconds, onTask, playMethod
             })
             res.status(200).send('Successfully update exit interview')
         } else {
