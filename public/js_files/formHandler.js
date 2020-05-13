@@ -173,7 +173,7 @@ AllForms.forEach(form => {
                 } else {
                     try {
                         await fetch('/api/exit', options)
-                        window.location.href = "/pages/final.html";
+                        window.location.href = "/pages/preUltimateQuestions.html";
                     } catch (err) {
                         console.error(err);
                     }
@@ -214,7 +214,7 @@ AllForms.forEach(form => {
                 } else {
                     try {
                         await fetch('/api/exit', options)
-                        window.location.href = "/pages/final.html";
+                        window.location.href = "/pages/preUltimateQuestions.html";
                     } catch (err) {
                         console.error(err);
                     }
@@ -255,7 +255,7 @@ AllForms.forEach(form => {
                 } else {
                     try {
                         await fetch('/api/exit', options)
-                        window.location.href = "/pages/final.html";
+                        window.location.href = "/pages/preUltimateQuestions.html";
                     } catch (err) {
                         console.error(err);
                     }
@@ -286,6 +286,36 @@ AllForms.forEach(form => {
                 try {
                     await fetch('/api/exit', options)
                     localStorage.removeItem("gameVersion");
+                    window.location.href = "/pages/preUltimateQuestions.html";
+                } catch (err) {
+                    console.error(err);
+                }
+
+            });
+            break;
+        // --------------FINAL EXIT QUESTIONS------------------
+        case 'finalInterview':
+            form.addEventListener('submit', async (event) => {
+                event.preventDefault();
+
+                let data = {
+                    onTask: form.elements["q1"].value,
+                    playMethod: form.elements["q2"].value,
+                    subjectId: localStorage.getItem("subject")
+                }
+                const options = {
+                    method: 'PUT',
+                    body: JSON.stringify(data),
+                    headers: { 'Content-Type': 'application/json' }
+                }
+                if (form.elements["q1"].value == "" || form.elements["q2"].value == "") {
+                    alert("please fill out your hunch");
+                    return;
+                }
+
+                try {
+                    await fetch('/api/exit', options)
+                    // localStorage.removeItem("gameVersion");
                     window.location.href = "/pages/final.html";
                 } catch (err) {
                     console.error(err);

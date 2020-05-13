@@ -278,7 +278,7 @@ sequelize
         console.error("Unable to connect to the database:", err);
     });
 
-// sequelize.sync({ force: true });
+// sequelize.sync({ alter: true });
 
 // // //-------------------GET PORT TO LISTEN ON-----------------
 const PORT = process.env.PORT || 5000;

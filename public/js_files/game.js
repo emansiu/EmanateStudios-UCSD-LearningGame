@@ -414,25 +414,25 @@ const createCharacter = (() => {
     let leftEyeWhites = document.createElementNS("http://www.w3.org/2000/svg", "circle");
     leftEyeWhites.setAttribute("cx", "40.5");
     leftEyeWhites.setAttribute("cy", "47.5");
-    leftEyeWhites.setAttribute("r", "1.8");
+    leftEyeWhites.setAttribute("r", characterAttributes.eyeSize);
     leftEyeWhites.setAttribute("fill", "white");
     // ------ create left eye pupil ------------
     let leftEye = document.createElementNS("http://www.w3.org/2000/svg", "circle");
     leftEye.setAttribute("cx", "40.5");
     leftEye.setAttribute("cy", "47.5");
-    leftEye.setAttribute("r", characterAttributes.eyeSize);
+    leftEye.setAttribute("r", "0.2667");
     leftEye.setAttribute("fill", characterAttributes.eyeColor);
     // ------ create right eye sclera------------
     let rightEyeWhites = document.createElementNS("http://www.w3.org/2000/svg", "circle");
     rightEyeWhites.setAttribute("cx", "44.5");
     rightEyeWhites.setAttribute("cy", "47.5");
-    rightEyeWhites.setAttribute("r", "1.8");
+    rightEyeWhites.setAttribute("r", characterAttributes.eyeSize);
     rightEyeWhites.setAttribute("fill", "white");
     // ------ create right eye pupil------------
     let rightEye = document.createElementNS("http://www.w3.org/2000/svg", "circle");
     rightEye.setAttribute("cx", "44.5");
     rightEye.setAttribute("cy", "47.5");
-    rightEye.setAttribute("r", characterAttributes.eyeSize);
+    rightEye.setAttribute("r", "0.2667");
     rightEye.setAttribute("fill", characterAttributes.eyeColor);
     // ------ create left horn ------------
     let leftHorn = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
