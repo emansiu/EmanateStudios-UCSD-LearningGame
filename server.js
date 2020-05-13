@@ -109,12 +109,12 @@ app.post('/api/quiz', async (req, res) => {
 // CREATE NEW TRIAL ASSIGNED TO SUBJECT
 app.post('/api/trial', async (req, res) => {
 
-    const { trialIteration, score, condition, cursorX_exitOccluder, cursorY_exitOccluder, cursorX_enterOccluder, cursorY_enterOccluder, success, bg_color, eye_size, eye_color, mouth_w, mouth_h, horns_w, horns_h, subjectId } = req.body;
+    const { trialIteration, score, condition, cursorX_exitOccluder, cursorY_exitOccluder, cursorX_enterOccluder, cursorY_enterOccluder, success, bg_color, eye_size, eye_color, mouth_w, mouth_h, horns_w, horns_h, exitDirection, refreshedPage, abandonedPage, subjectId } = req.body;
 
     try {
         // first create new subject
         await trial.create({
-            trialIteration, score, condition, cursorX_exitOccluder, cursorY_exitOccluder, cursorX_enterOccluder, cursorY_enterOccluder, success, bg_color, eye_size, eye_color, mouth_w, mouth_h, horns_w, horns_h, subjectId
+            trialIteration, score, condition, cursorX_exitOccluder, cursorY_exitOccluder, cursorX_enterOccluder, cursorY_enterOccluder, success, bg_color, eye_size, eye_color, mouth_w, mouth_h, horns_w, horns_h, exitDirection, refreshedPage, abandonedPage, subjectId
         });
 
         res.status(200).send({ msg: "Trial Round Successfully" })
@@ -278,7 +278,7 @@ sequelize
         console.error("Unable to connect to the database:", err);
     });
 
-// sequelize.sync({ alter: true });
+// sequelize.sync({ force: true });
 
 // // //-------------------GET PORT TO LISTEN ON-----------------
 const PORT = process.env.PORT || 5000;

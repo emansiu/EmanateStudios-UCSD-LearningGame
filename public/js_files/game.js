@@ -6,26 +6,37 @@ let windowWidth = window.innerWidth;
 if (windowWidth < 900 || windowHeight < 600) {
     alert("Your window screen is too small. Please maximize.")
 }
+// check if subject went through forms first. Or if disqualified can't return to game.
+if (!localStorage.getItem("subject")) {
+    window.location.href = "/pages/disqualified.html";
+}
+
 // check if page focus is lost
 const disqualifyBackToStart = async () => {
     //if they get a perfect round or play to the end then don't delete
     if (currentRound !== numberOfRounds && level !== numberOfLevels) {
         if (document.hidden) {
             let data = {
-                subjectId: parseInt(localStorage.getItem("subject")),
-                condition: gameCondition,
+                refreshedPage: performance.navigation.type == 1 ? true : false,
+                abandonedPage: performance.navigation.type == 1 ? false : true,
+                subjectId: parseInt(localStorage.getItem("subject"))
             }
             const options = {
-                method: 'DELETE',
+                method: 'POST',
                 body: JSON.stringify(data),
                 headers: { 'Content-Type': 'application/json' }
             }
             await fetch('/api/trial', options)
+            // previous versions delete data. Now we just redirect.
+            localStorage.removeItem("subject");
+            localStorage.removeItem("gameVersion");
             window.location.href = "/pages/disqualified.html";
         }
     }
 }
-document.addEventListener("visibilitychange", disqualifyBackToStart, false);
+document.addEventListener("visibilitychange", disqualifyBackToStart);
+
+
 
 const gameVersion = localStorage.getItem("gameVersion");
 let gameCondition = "";
@@ -48,6 +59,9 @@ let cursorX_exitOccluder = 0;
 let cursorY_exitOccluder = 0;
 let keepPlaying = true;
 let success = false;
+let direction = '';
+let refreshedPage = false;
+let abandonedPage = false;
 // attributes to send to database:
 let currentRoundFeatures = {
     bg_color: '',
@@ -56,7 +70,7 @@ let currentRoundFeatures = {
     mouth_w: '',
     mouth_h: '',
     horns_w: '',
-    horns_h: ''
+    horns_h: '',
 }
 
 //------ direction animations:
@@ -146,6 +160,7 @@ let removeElement = (elementToRemove) => {
 }
 // !!**==== CHECK IF GAME IS OVER EVERY ROUND ===**!!
 let checkGameOver = (charactersToRemove) => {
+    console.log(`checking game over direction is ${(direction)}`);
     // POST ROUND TO DATABASE
     let data = {
         trialIteration: addTrialIteration(),
@@ -158,6 +173,7 @@ let checkGameOver = (charactersToRemove) => {
         mouth_h: currentRoundFeatures.mouth_h,
         horns_w: currentRoundFeatures.horns_w,
         horns_h: currentRoundFeatures.horns_h,
+        exitDirection: direction,
         subjectId: parseInt(localStorage.getItem("subject")),
         cursorX_enterOccluder, cursorY_enterOccluder, cursorX_exitOccluder, cursorY_exitOccluder, score,
     }
@@ -169,16 +185,18 @@ let checkGameOver = (charactersToRemove) => {
     fetch('/api/trial', options)
 
     //*****========= PERFORM ROUND LOGIC ============= ******
+    //----Last Level, Last Round----
     if (level === numberOfLevels && currentRound === numberOfRounds) {
         keepPlaying = false;
         gameEnd();
     } else if (score === numberOfRounds) {
+        //----Last Round, Not Last Level----
         keepPlaying = false;
         gameEnd();
     } else if (currentRound === numberOfRounds) {
+        //----Perfect Round----
         if (charactersToRemove) {
-            removeElement(charactersToRemove[0])
-            removeElement(charactersToRemove[1])
+            removeElement(charactersToRemove[0])//<-- if there are more elements we can add later
         }
         keepPlaying = true;
         currentRound = 1;
@@ -188,9 +206,9 @@ let checkGameOver = (charactersToRemove) => {
         document.getElementById("score").innerHTML = `Score : ${score}`
         timedMessage("Level Complete! Next levels starts in : ", 20000) //<!!!***RECURSIVELY STARTING ANOTHER ROUND***!!!
     } else {
+        //----keep playing
         if (charactersToRemove) {
-            removeElement(charactersToRemove[0])
-            removeElement(charactersToRemove[1])
+            removeElement(charactersToRemove[0])//<-- if there are more elements we can add later
         }
         addRound();
         document.getElementById("level").innerHTML = `Level : ${level}/${numberOfLevels}`
@@ -258,19 +276,21 @@ const characterFadeOut = (characterToFade, occluder) => {
 }
 //******ANIMATE RIGHT
 const animateRight = (characterToAnimate, occluder) => {
-
+    direction = "right";
+    console.log(direction);
     animRight.to(characterToAnimate, { duration: 0.5, x: 21, y: -30 })
     animRight.to(characterToAnimate, { duration: 0.5, opacity: 1, onComplete: mouseAfterHidden })
-    animRight.to(characterToAnimate, { duration: 0.5, x: 46.5, y: -30, ease: "none", svgOrigin: "300 200" })
-    animRight.to(occluder, { duration: 1, y: 2, opacity: 0, scale: 1.1, transformOrigin: "center center", onComplete: checkGameOver, onCompleteParams: [[characterToAnimate, occluder]] }, "+=0.5")
+    animRight.to(characterToAnimate, { duration: 0.5, x: 46.5, y: -30, ease: "none", svgOrigin: "300 200", onComplete: removeElement, onCompleteParams: [characterToAnimate] })
+    animRight.to(occluder, { duration: 1, y: 2, opacity: 0, scale: 1.1, transformOrigin: "center center", onComplete: checkGameOver, onCompleteParams: [[occluder]] }, "+=0.5")
 }
 //******ANIMATE LEFT
 const animateLeft = (characterToAnimate, occluder) => {
-
+    direction = "left";
+    console.log(direction);
     animLeft.to(characterToAnimate, { duration: 0.5, x: -21, y: -30 })
     animLeft.to(characterToAnimate, { duration: 0.5, opacity: 1, onComplete: mouseAfterHidden })
-    animLeft.to(characterToAnimate, { duration: 0.5, x: -46.5, y: -30, ease: "none" })
-    animLeft.to(occluder, { duration: 1, y: 2, opacity: 0, scale: 1.1, transformOrigin: "center center", onComplete: checkGameOver, onCompleteParams: [[characterToAnimate, occluder]] }, "+=0.5")
+    animLeft.to(characterToAnimate, { duration: 0.5, x: -46.5, y: -30, ease: "none", onComplete: removeElement, onCompleteParams: [characterToAnimate] })
+    animLeft.to(occluder, { duration: 1, y: 2, opacity: 0, scale: 1.1, transformOrigin: "center center", onComplete: checkGameOver, onCompleteParams: [[occluder]] }, "+=0.5")
 }
 //******MAIN GAME ANIMATION (CLICK CHECK INITIATES IN HERE)*****
 const gameAnimation = (characterToAnimate, occluder) => {
@@ -453,6 +473,8 @@ const createCharacter = (() => {
 if (windowWidth > 900 && windowHeight > 600) {
     timedMessage("Game Starts in :", 6000)
 }
+
+
 
 
 

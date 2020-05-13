@@ -53,6 +53,15 @@ module.exports = {
       horns_h: {
         type: Sequelize.INTEGER
       },
+      exitDirection: {
+        type: Sequelize.STRING
+      },
+      refreshedPage: {
+        type: Sequelize.BOOLEAN
+      },
+      abandonedPage: {
+        type: Sequelize.BOOLEAN
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

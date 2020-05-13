@@ -15,7 +15,10 @@ module.exports = (sequelize, DataTypes) => {
     mouth_w: DataTypes.INTEGER,
     mouth_h: DataTypes.INTEGER,
     horns_w: DataTypes.INTEGER,
-    horns_h: DataTypes.INTEGER
+    horns_h: DataTypes.INTEGER,
+    exitDirection: DataTypes.STRING,
+    refreshedPage: DataTypes.BOOLEAN,
+    abandonedPage: DataTypes.BOOLEAN,
   }, {});
   trial.associate = function (models) {
     trial.belongsTo(models.subject)
