@@ -232,6 +232,44 @@ app.post('/data/exit', async (req, res) => {
         res.status(500).send('Not authorized for this route')
     }
 })
+app.post('/data/disqualifiedAbandoned', async (req, res) => {
+    const credentials = req.body.credentials;
+
+    if (credentials === process.env.DB_SK) {
+        try {
+            let ServerData = await trial.findAll({ where: { abandonedPage: true } });
+
+            if (ServerData) {
+                return res.status(200).json({ ServerData })
+            }
+        }
+        catch (err) {
+            console.error(err.message);
+            res.status(500).send('Server Error')
+        }
+    } else {
+        res.status(500).send('Not authorized for this route')
+    }
+})
+app.post('/data/disqualifiedReloaded', async (req, res) => {
+    const credentials = req.body.credentials;
+
+    if (credentials === process.env.DB_SK) {
+        try {
+            let ServerData = await trial.findAll({ where: { refreshedPage: true } });
+
+            if (ServerData) {
+                return res.status(200).json({ ServerData })
+            }
+        }
+        catch (err) {
+            console.error(err.message);
+            res.status(500).send('Server Error')
+        }
+    } else {
+        res.status(500).send('Not authorized for this route')
+    }
+})
 app.post('/data/quiz', async (req, res) => {
     const credentials = req.body.credentials;
 
