@@ -27,8 +27,8 @@ const disqualifyBackToStart = async () => {
         }
         await fetch('/api/trial', options)
         // previous versions delete data. Now we just redirect.
-        // localStorage.removeItem("subject");
-        // localStorage.removeItem("gameVersion");
+        localStorage.removeItem("subject");
+        localStorage.removeItem("gameVersion");
         window.location.href = "/pages/disqualified.html";
     }
 }
@@ -47,8 +47,8 @@ if (gameVersion === "version1") {
 }
 let score = 0;
 let trialIteration = 0;
-const numberOfRounds = 2;
-const numberOfLevels = 2;
+const numberOfRounds = 30;
+const numberOfLevels = 6;
 let currentRound = 1;
 let level = 1;
 let cursorX_enterOccluder = 0;
