@@ -33,9 +33,6 @@ const disqualifyBackToStart = async () => {
     }
 }
 
-
-
-
 const gameVersion = localStorage.getItem("gameVersion");
 let gameCondition = "";
 if (gameVersion === "version1") {
@@ -474,9 +471,3 @@ if (performance.navigation.type == 1) {
     // check if tab lost focus
     window.addEventListener("blur", disqualifyBackToStart);
 }
-
-
-
-
-
-
