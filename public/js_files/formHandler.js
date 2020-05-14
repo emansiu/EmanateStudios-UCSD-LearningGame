@@ -315,7 +315,8 @@ AllForms.forEach(form => {
 
                 try {
                     await fetch('/api/exit', options)
-                    // localStorage.removeItem("gameVersion");
+                    localStorage.removeItem("subject");
+                    localStorage.removeItem("gameVersion");
                     window.location.href = "/pages/final.html";
                 } catch (err) {
                     console.error(err);

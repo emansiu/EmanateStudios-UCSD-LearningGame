@@ -15,26 +15,24 @@ if (!localStorage.getItem("subject")) {
 const disqualifyBackToStart = async () => {
     //if they get a perfect round or play to the end then don't delete
     if (currentRound !== numberOfRounds && level !== numberOfLevels) {
-        if (document.hidden) {
-            let data = {
-                refreshedPage: performance.navigation.type == 1 ? true : false,
-                abandonedPage: performance.navigation.type == 1 ? false : true,
-                subjectId: parseInt(localStorage.getItem("subject"))
-            }
-            const options = {
-                method: 'POST',
-                body: JSON.stringify(data),
-                headers: { 'Content-Type': 'application/json' }
-            }
-            await fetch('/api/trial', options)
-            // previous versions delete data. Now we just redirect.
-            localStorage.removeItem("subject");
-            localStorage.removeItem("gameVersion");
-            window.location.href = "/pages/disqualified.html";
+        let data = {
+            refreshedPage: performance.navigation.type == 1 ? true : false,
+            abandonedPage: performance.navigation.type == 1 ? false : true,
+            subjectId: parseInt(localStorage.getItem("subject"))
         }
+        const options = {
+            method: 'POST',
+            body: JSON.stringify(data),
+            headers: { 'Content-Type': 'application/json' }
+        }
+        await fetch('/api/trial', options)
+        // previous versions delete data. Now we just redirect.
+        // localStorage.removeItem("subject");
+        // localStorage.removeItem("gameVersion");
+        window.location.href = "/pages/disqualified.html";
     }
 }
-document.addEventListener("visibilitychange", disqualifyBackToStart);
+
 
 
 
@@ -49,8 +47,8 @@ if (gameVersion === "version1") {
 }
 let score = 0;
 let trialIteration = 0;
-const numberOfRounds = 30;
-const numberOfLevels = 6;
+const numberOfRounds = 2;
+const numberOfLevels = 2;
 let currentRound = 1;
 let level = 1;
 let cursorX_enterOccluder = 0;
@@ -160,7 +158,6 @@ let removeElement = (elementToRemove) => {
 }
 // !!**==== CHECK IF GAME IS OVER EVERY ROUND ===**!!
 let checkGameOver = (charactersToRemove) => {
-    console.log(`checking game over direction is ${(direction)}`);
     // POST ROUND TO DATABASE
     let data = {
         trialIteration: addTrialIteration(),
@@ -277,7 +274,6 @@ const characterFadeOut = (characterToFade, occluder) => {
 //******ANIMATE RIGHT
 const animateRight = (characterToAnimate, occluder) => {
     direction = "right";
-    console.log(direction);
     animRight.to(characterToAnimate, { duration: 0.5, x: 21, y: -30 })
     animRight.to(characterToAnimate, { duration: 0.5, opacity: 1, onComplete: mouseAfterHidden })
     animRight.to(characterToAnimate, { duration: 0.5, x: 46.5, y: -30, ease: "none", svgOrigin: "300 200", onComplete: removeElement, onCompleteParams: [characterToAnimate] })
@@ -286,7 +282,6 @@ const animateRight = (characterToAnimate, occluder) => {
 //******ANIMATE LEFT
 const animateLeft = (characterToAnimate, occluder) => {
     direction = "left";
-    console.log(direction);
     animLeft.to(characterToAnimate, { duration: 0.5, x: -21, y: -30 })
     animLeft.to(characterToAnimate, { duration: 0.5, opacity: 1, onComplete: mouseAfterHidden })
     animLeft.to(characterToAnimate, { duration: 0.5, x: -46.5, y: -30, ease: "none", onComplete: removeElement, onCompleteParams: [characterToAnimate] })
@@ -463,8 +458,6 @@ const createCharacter = (() => {
     //---- attach to static svg on page ----
     document.getElementById("playArea").appendChild(characterGroup);
 
-
-
     return (characterGroup)
 });
 //<!!!***RECURSIVE THROUGH "checkGameOver = (characterToRemove)" FUNCTION***!!!
@@ -474,6 +467,13 @@ if (windowWidth > 900 && windowHeight > 600) {
     timedMessage("Game Starts in :", 6000)
 }
 
+// checking if page refreshed
+if (performance.navigation.type == 1) {
+    disqualifyBackToStart()
+} else {
+    // check if tab lost focus
+    window.addEventListener("blur", disqualifyBackToStart);
+}
 
 
 
