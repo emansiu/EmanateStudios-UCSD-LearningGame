@@ -154,6 +154,18 @@ app.delete('/api/trial', async (req, res) => {
         res.status(500).send('Server Error')
     }
 });
+app.delete('/api/subject', async (req, res) => {
+    const { subjectId } = req.body;
+    try {
+        // delete all entries from user
+        await subject.destroy({ where: { subjectId } });
+
+        return res.status(200).send({ msg: "Subject Successfully Removed" })
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error')
+    }
+});
 
 //============ DOWNLOAD ROUTES =============
 app.post('/data/subject', async (req, res) => {
