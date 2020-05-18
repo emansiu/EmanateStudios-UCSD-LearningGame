@@ -162,7 +162,7 @@ app.delete('/api/subject', async (req, res) => {
     if (credentials === process.env.DB_SK) {
         try {
             // delete all entries from user
-            await subject.destroy({ where: { subjectId } });
+            await subject.destroy({ where: { id: subjectId } });
 
             return res.status(200).send({ msg: "Subject Successfully Removed" })
         } catch (err) {
