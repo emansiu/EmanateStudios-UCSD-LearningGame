@@ -143,34 +143,39 @@ app.post('/auth', async (req, res) => {
 
 //=============== DELETING DATA=====================
 app.delete('/api/trial', async (req, res) => {
-    const { subjectId } = req.body;
-    try {
-        // delete all entries from user
-        await trial.destroy({ where: { subjectId } });
+    const { subjectId, credentials } = req.body;
 
-        return res.status(200).send({ msg: "Trials Successfully Removed" })
-    } catch (err) {
-        console.error(err.message);
-        res.status(500).send('Server Error')
+    if (credentials === process.env.DB_SK) {
+        try {
+            // delete all entries from user
+            await trial.destroy({ where: { subjectId } });
+
+            return res.status(200).send({ msg: "Trials Successfully Removed" })
+        } catch (err) {
+            console.error(err.message);
+            res.status(500).send('Server Error')
+        }
     }
 });
 app.delete('/api/subject', async (req, res) => {
-    const { subjectId } = req.body;
-    try {
-        // delete all entries from user
-        await subject.destroy({ where: { subjectId } });
+    const { subjectId, credentials } = req.body;
+    if (credentials === process.env.DB_SK) {
+        try {
+            // delete all entries from user
+            await subject.destroy({ where: { subjectId } });
 
-        return res.status(200).send({ msg: "Subject Successfully Removed" })
-    } catch (err) {
-        console.error(err.message);
-        res.status(500).send('Server Error')
+            return res.status(200).send({ msg: "Subject Successfully Removed" })
+        } catch (err) {
+            console.error(err.message);
+            res.status(500).send('Server Error')
+        }
     }
 });
 
 //============ DOWNLOAD ROUTES =============
 app.post('/data/subject', async (req, res) => {
     const credentials = req.body.credentials;
-    console.log(credentials);
+
     if (credentials === process.env.DB_SK) {
         try {
             let ServerData = await subject.findAll();
