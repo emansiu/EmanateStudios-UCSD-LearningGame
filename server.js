@@ -45,15 +45,23 @@ app.post('/api/subject', async (req, res) => {
 
     const { startTime_consent, endTime_consent, firstName, lastName, email, wantsConsentEmailed, screenWidth, screenHeight, userAgent } = req.body;
 
-    try {
-        // first create new subject
-        const newSubject = await subject.create({
-            startTime_consent, endTime_consent, firstName, lastName, email, wantsConsentEmailed, screenWidth, screenHeight, userAgent
-        });
-        res.status(200).json({ subject: newSubject.id })
-    } catch (err) {
-        console.error(err.message);
-        res.status(500).send('Server Error')
+    // check if email exists
+    const existingUser = await subject.findOne({ where: { email } });
+
+    if (existingUser) {
+        return res.status(400).send({ msg: "email already exists" });
+    }
+    else {
+        try {
+            // first create new subject
+            const newSubject = await subject.create({
+                startTime_consent, endTime_consent, firstName, lastName, email, wantsConsentEmailed, screenWidth, screenHeight, userAgent
+            });
+            res.status(200).json({ subject: newSubject.id })
+        } catch (err) {
+            console.error(err.message);
+            res.status(500).send('Server Error')
+        }
     }
 });
 // CREATE NEW DEMOGRAPHIC

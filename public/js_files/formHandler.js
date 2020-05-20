@@ -71,11 +71,16 @@ AllForms.forEach(form => {
                     headers: { 'Content-Type': 'application/json' }
                 }
                 const newUser = await fetch('/api/subject', options)
-                const jsonData = await newUser.json();
-                const subjectID = jsonData.subject
-                localStorage.setItem("subject", subjectID)//<--temporarily provide persisted data to local storage. Removed on errors or at end of game.
-                localStorage.setItem("gameVersion", getGameVersion(subjectID))
-                window.location.href = "/pages/demographics.html";
+                console.log(newUser.status);
+                if (newUser.status == 400) {
+                    return window.location.href = "/pages/existingUser.html";
+                } else {
+                    const jsonData = await newUser.json();
+                    const subjectID = jsonData.subject
+                    localStorage.setItem("subject", subjectID)//<--temporarily provide persisted data to local storage. Removed on errors or at end of game.
+                    localStorage.setItem("gameVersion", getGameVersion(subjectID))
+                    window.location.href = "/pages/demographics.html";
+                }
             });
             break;
         // --------------DEMOGRAPHICS FORM ------------------
