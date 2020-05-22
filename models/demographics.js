@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
     demographic: DataTypes.STRING
   }, {});
   demographics.associate = function (models) {
-    // associations can be defined here
+    demographics.belongsTo(models.subject)
   };
   return demographics;
 };

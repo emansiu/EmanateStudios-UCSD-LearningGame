@@ -67,12 +67,12 @@ app.post('/api/subject', async (req, res) => {
 // CREATE NEW DEMOGRAPHIC
 app.post('/api/demographic', async (req, res) => {
 
-    const { age, gender, demographic } = req.body;
+    const { age, gender, demographic, subjectId } = req.body;
 
     try {
         // first create new subject
         const newSubject = await demographics.create({
-            age, gender, demographic
+            age, gender, demographic, subjectId
         });
         res.status(200).json({ subject: newSubject.id })
     } catch (err) {
@@ -342,7 +342,7 @@ sequelize
     });
 
 // UNCOMMENT TO FLUSH DB
-// sequelize.sync({ force: true });
+sequelize.sync({ alter: true });
 
 // // //-------------------GET PORT TO LISTEN ON-----------------
 const PORT = process.env.PORT || 5000;

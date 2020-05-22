@@ -12,7 +12,12 @@ if (screenWidth < 900 || screenHeight < 600 || navigator.maxTouchPoints != 0) {
     window.location.href = "/pages/lackRequirements.html";
 }
 //================== INITIAL VARIABLES / FUNCTIONS ======================
-let timeOnPageLoad = moment().format('YYYY-MM-DD h:mm:ss.ms'); //<--recorded as soon as page is loaded
+// import time zones from moment that we want to convert to (below LA and NY)
+moment.tz.add([
+    'America/Los_Angeles|PST PDT|80 70|0101|1Lzm0 1zb0 Op0',
+    'America/New_York|EST EDT|50 40|0101|1Lz50 1zb0 Op0'
+]);
+let timeOnPageLoad = moment.utc().tz('America/Los_Angeles').format('YYYY-MM-DD h:mm:ss.ms'); //<--recorded as soon as page is loaded
 
 let getGameVersion = (id) => {
 
@@ -48,7 +53,7 @@ AllForms.forEach(form => {
 
                 let data = {
                     startTime_consent: timeOnPageLoad,
-                    endTime_consent: moment().format('YYYY-MM-DD h:mm:ss.ms'),
+                    endTime_consent: moment.utc().tz('America/Los_Angeles').format('YYYY-MM-DD h:mm:ss.ms'),
                     firstName: form.elements["firstName"].value,
                     lastName: form.elements["lastName"].value,
                     email: form.elements["emailConsent"].value,
@@ -91,7 +96,8 @@ AllForms.forEach(form => {
                 let data = {
                     age: form.elements["age"].value,
                     gender: form.elements["gender"].value,
-                    demographic: form.elements["demographic"].value
+                    demographic: form.elements["demographic"].value,
+                    subjectId: localStorage.getItem("subject"),
                 }
                 // very rudamentary form check but quick and gets job done
                 const { age, gender, demographic } = data;
@@ -115,7 +121,7 @@ AllForms.forEach(form => {
 
                 let data = {
                     startTime_quiz: timeOnPageLoad,
-                    endTime_quiz: moment().format('YYYY-MM-DD h:mm:ss.ms'),
+                    endTime_quiz: moment.utc().tz('America/Los_Angeles').format('YYYY-MM-DD h:mm:ss.ms'),
                     subjectId: localStorage.getItem("subject")
                 }
                 const options = {
@@ -157,7 +163,7 @@ AllForms.forEach(form => {
                 let data = {
                     has_hunch: form.elements["q1"].value,
                     subjectId: localStorage.getItem("subject"),
-                    finish_date_time: moment().format('YYYY-MM-DD h:mm:ss.ms')
+                    finish_date_time: moment.utc().tz('America/Los_Angeles').format('YYYY-MM-DD h:mm:ss.ms')
                 }
                 const options = {
                     method: 'PUT',
@@ -194,7 +200,7 @@ AllForms.forEach(form => {
                     hunch1: document.getElementById("hunch1").value,
                     hunch1_level: document.getElementById("confidencePercent").value,
                     subjectId: localStorage.getItem("subject"),
-                    finish_date_time: moment().format('YYYY-MM-DD h:mm:ss.ms')
+                    finish_date_time: moment.utc().tz('America/Los_Angeles').format('YYYY-MM-DD h:mm:ss.ms')
                 }
                 const options = {
                     method: 'PUT',
@@ -235,7 +241,7 @@ AllForms.forEach(form => {
                     hunch2: document.getElementById("hunch").value,
                     hunch2_level: document.getElementById("confidencePercent").value,
                     subjectId: localStorage.getItem("subject"),
-                    finish_date_time: moment().format('YYYY-MM-DD h:mm:ss.ms')
+                    finish_date_time: moment.utc().tz('America/Los_Angeles').format('YYYY-MM-DD h:mm:ss.ms')
                 }
                 const options = {
                     method: 'PUT',
@@ -275,7 +281,7 @@ AllForms.forEach(form => {
                 let data = {
                     hunch3: document.getElementById("hunch").value,
                     hunch3_level: document.getElementById("confidencePercent").value,
-                    finish_date_time: moment().format('YYYY-MM-DD h:mm:ss.ms'),
+                    finish_date_time: moment.utc().tz('America/Los_Angeles').format('YYYY-MM-DD h:mm:ss.ms'),
                     subjectId: localStorage.getItem("subject")
                 }
                 const options = {
@@ -306,6 +312,7 @@ AllForms.forEach(form => {
                 let data = {
                     onTask: form.elements["q1"].value,
                     playMethod: form.elements["q2"].value,
+                    finish_date_time: moment.utc().tz('America/Los_Angeles').format('YYYY-MM-DD h:mm:ss.ms'),
                     subjectId: localStorage.getItem("subject")
                 }
                 const options = {
