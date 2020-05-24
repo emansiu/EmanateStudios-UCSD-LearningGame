@@ -85,12 +85,17 @@ const circleForEffect = document.createElementNS("http://www.w3.org/2000/svg", "
 //=========================== GAME FUNCTIONS ========================================
 let timedMessage = (text, timeToDelay) => {
 
+    // give break a chance to return
+    window.removeEventListener("blur", disqualifyBackToStart);
+
     let timeLeft = 0
     const timerBySecond = () => {
         if (timeLeft < timeToDelay) {
             timeLeft += 1000;
             document.getElementById("timer").innerHTML = `${text} ${(timeToDelay - timeLeft) / 1000} seconds`;
         } else {
+            // check if tab lost focus
+            window.addEventListener("blur", disqualifyBackToStart);
             clearInterval(timer);
             gameAnimation(createCharacter(), createOccluder());
             document.getElementById("timer").innerHTML = "";

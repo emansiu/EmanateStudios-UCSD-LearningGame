@@ -163,6 +163,8 @@ app.delete('/api/trial', async (req, res) => {
             console.error(err.message);
             res.status(500).send('Server Error')
         }
+    } else {
+        res.status(403).send('Invalid access request');
     }
 });
 app.delete('/api/subject', async (req, res) => {
@@ -342,7 +344,7 @@ sequelize
     });
 
 // UNCOMMENT TO FLUSH DB
-sequelize.sync({ alter: true });
+// sequelize.sync({ alter: true });
 
 // // //-------------------GET PORT TO LISTEN ON-----------------
 const PORT = process.env.PORT || 5000;
