@@ -102,19 +102,19 @@ const populateStats = async () => {
             body: JSON.stringify({ credentials: localStorage.getItem("token") })
         }
         const SubjectResponse = await (await fetch('/data/subject', options)).json();
-        const TrialResponse = await (await fetch('/data/trial', options)).json();
         const DemographicResponse = await (await fetch('/data/demographics', options)).json();
         const ExitResponse = await (await fetch('/data/exit', options)).json();
         const QuizResponse = await (await fetch('/data/quiz', options)).json();
         const AbandonedResponse = await (await fetch('/data/disqualifiedAbandoned', options)).json();
         const ReloadedResponse = await (await fetch('/data/disqualifiedReloaded', options)).json();
         document.getElementById('statSubject').innerHTML = `Subjects : ${SubjectResponse.ServerData.length}`;
-        document.getElementById('statTrial').innerHTML = `Trials : ${TrialResponse.ServerData.length}`;
         document.getElementById('statDemographic').innerHTML = `Demographics : ${DemographicResponse.ServerData.length}`;
         document.getElementById('statExit').innerHTML = `Exit Interviews : ${ExitResponse.ServerData.length}`;
         document.getElementById('statQuiz').innerHTML = `Quizes : ${QuizResponse.ServerData.length}`;
         document.getElementById('statAbandoned').innerHTML = `Disqualified Abandoned : ${AbandonedResponse.ServerData.length}`;
         document.getElementById('statReloaded').innerHTML = `Disqualified Reloaded : ${ReloadedResponse.ServerData.length}`;
+        const TrialResponse = await (await fetch('/data/trial', options)).json();
+        document.getElementById('statTrial').innerHTML = `Trials : ${TrialResponse.ServerData.length}`;
     } catch (err) {
         console.error(err);
     }
