@@ -259,6 +259,38 @@ app.post('/data/exit', async (req, res) => {
         res.status(500).send('Not authorized for this route')
     }
 })
+// this returns only the subjects with exit interview
+app.post('/data/exit/subjects', async (req, res) => {
+    const credentials = req.body.credentials;
+
+    if (credentials === process.env.DB_SK) {
+        try {
+            let dataToSynthesize = await exitInterview.findAll({
+                attributes: ['id'],
+                include: {
+                    model: subject,
+                    attributes: ['firstName', 'lastName', 'email']
+                }
+            });
+
+            if (dataToSynthesize) {
+                let ServerData = dataToSynthesize.map(person => ({
+                    exitInterviewID: person.id,
+                    firstName: person.subject.firstName,
+                    lastName: person.subject.lastName,
+                    email: person.subject.email
+                }))
+                return res.status(200).json({ ServerData })
+            }
+        }
+        catch (err) {
+            console.error(err.message);
+            res.status(500).send('Server Error')
+        }
+    } else {
+        res.status(500).send('Not authorized for this route')
+    }
+})
 app.post('/data/disqualifiedAbandoned', async (req, res) => {
     const credentials = req.body.credentials;
 

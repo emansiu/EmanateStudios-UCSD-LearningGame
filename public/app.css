@@ -274,6 +274,9 @@ button:hover {
     grid-template-columns:repeat(2, 1fr);
     justify-items: center;
 }
+.duoGrid button{
+    width:100%;
+}
 .selfLeft{
     justify-self: start;
     margin:1em 1.5em;
