@@ -1,7 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 const path = require("path");
-const stringifyToCSV = require('csv-stringify');//<--- tool to export data as csv to client
+const { Op } = require("sequelize");
 
 const { sequelize, subject, exitInterview, trial, quiz, demographics } = require("./models"); //<--this is actually the database (very confusing way sequelize works but it does. You don't have to specify index.js, it defaults to index)
 
@@ -266,6 +266,7 @@ app.post('/data/exit/subjects', async (req, res) => {
     if (credentials === process.env.DB_SK) {
         try {
             let dataToSynthesize = await exitInterview.findAll({
+                where: { subjectId: { [Op.ne]: null } },
                 attributes: ['id'],
                 include: {
                     model: subject,
